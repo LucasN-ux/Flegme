@@ -1,7 +1,7 @@
 /* ============================================================
    Logique pure de l'atlas : éléments, matières, atomes, recettes
    ============================================================ */
-import { FAMILLES, ELEMENTS_RAW, MATIERES, CATS, RECETTES, RECETTE_THEMES } from "../data/atlas";
+import { FAMILLES, ELEMENTS_RAW, MATIERES, CATS, RECETTES, RECETTE_THEMES, RECETTES_PHYSIQUES, RECETTES_SUBATOMIQUES } from "../data/atlas";
 import type { Matiere } from "../data/types";
 
 export type Counts = Record<string, number>;
@@ -200,6 +200,8 @@ export interface Rec {
   key: string;
   /** index du thème dans RECETTE_THEMES */
   theme: number;
+  /** niveau de transformation : 1 physique, 2 chimique, 3 subatomique */
+  lvl: 1 | 2 | 3;
 }
 export const keyOf = (arr: string[]): string => [...arr].sort().join("+");
 const themeOf = (i: number): number => {
@@ -210,7 +212,19 @@ const themeOf = (i: number): number => {
   }
   return RECETTE_THEMES.length - 1;
 };
-export const RECS: Rec[] = RECETTES.map((r, i) => ({ i, ins: r[0], out: r[1], txt: r[2], by: r[3] || [], key: keyOf(r[0]), theme: themeOf(i) }));
+const sig = (ins: string[], out: string) => keyOf(ins) + ">" + out;
+const sigOf = (s: string) => { const [ins, out] = s.split(">"); return sig(ins.split("+"), out); };
+const PHYS = new Set(RECETTES_PHYSIQUES.map(sigOf));
+const SUBA = new Set(RECETTES_SUBATOMIQUES.map(sigOf));
+const lvlOf = (ins: string[], out: string): 1 | 2 | 3 => {
+  const s = sig(ins, out);
+  return SUBA.has(s) ? 3 : PHYS.has(s) ? 1 : 2;
+};
+export const RECS: Rec[] = RECETTES.map((r, i) => ({ i, ins: r[0], out: r[1], txt: r[2], by: r[3] || [], key: keyOf(r[0]), theme: themeOf(i), lvl: lvlOf(r[0], r[1]) }));
+if (import.meta.env.DEV) {
+  const all = new Set(RECS.map((r) => sig(r.ins, r.out)));
+  [...PHYS, ...SUBA].forEach((s) => { if (!all.has(s)) console.warn("Niveau : recette inconnue", s); });
+}
 export const BYKEY: Record<string, Rec> = {};
 RECS.forEach((r) => { if (!BYKEY[r.key]) BYKEY[r.key] = r; });
 export const USED: Record<string, Rec[]> = {};

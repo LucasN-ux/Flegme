@@ -4,6 +4,7 @@ import { useAtlas } from "../store/atlas";
 import { useUi, restartClass } from "../store/ui";
 import { Graph } from "./Graph";
 import { Chip, Orb, cssVars, joinNodes } from "./ui";
+import { LevelTag } from "./Levels";
 
 function Crumbs() {
   const path = useAtlas((s) => s.path);
@@ -41,6 +42,7 @@ function BannerBar() {
           <b className="op">→</b>
           <Orb id={banner.out} />
           <span><b>{info(banner.out).name}</b></span>
+          {banner.lvl && <LevelTag lvl={banner.lvl} />}
         </>
       ) : (
         <>

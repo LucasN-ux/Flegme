@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { info } from "../lib/chem";
 import { useAtlas } from "../store/atlas";
 import { G, Orb, joinNodes } from "./ui";
+import { LevelTag } from "./Levels";
+import { NIVEAUX } from "../data/atlas";
 
 export function RecipeModal() {
   const modal = useAtlas((s) => s.modal);
@@ -42,6 +44,7 @@ export function RecipeModal() {
           </div>
         </div>
         <p className="m-txt"><G>{r.txt}</G></p>
+        <p className="m-lvl"><LevelTag lvl={r.lvl} /> <span>{NIVEAUX[r.lvl].change}</span></p>
         {r.by.length > 0 && <p className="dim small">Il reste aussi : {r.by.map((b) => info(b).name).join(", ")}.</p>}
         <div className="m-btns">
           <button className="btn gold" onClick={() => focus(r.out)}>Ouvrir la fiche « {out.name} »</button>

@@ -742,6 +742,28 @@ footer .epitaph::before,footer .epitaph::after{content:" ✦ ";color:var(--gold)
 .tabbar a{font-size:9.5px!important;letter-spacing:.04em!important}
 .tabbar a.on{color:var(--gold)!important}
 
+/* niveaux de transformation */
+.lvl{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:2px 9px 2px 2px;background:var(--lc);color:#fff;
+  font-family:var(--display);font-stretch:115%;font-weight:700;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;cursor:help;vertical-align:middle}
+.lvl b{display:grid;place-items:center;width:17px;height:17px;border-radius:50%;background:rgba(255,255,255,.92);color:var(--lc);font-size:10px}
+.r-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.m-lvl{display:flex;align-items:flex-start;gap:8px;font-size:14.5px;color:var(--muted);margin:10px 0 0}
+.m-lvl .lvl{flex:none;margin-top:1px}
+.lvl-title{margin-top:24px!important}
+.lvl-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:4px 0 26px}
+.lvl-card{display:flex;flex-direction:column;gap:8px;text-align:left;padding:14px 16px;border-radius:16px;background:var(--panel);border-top:4px solid var(--lc);transition:transform .15s,opacity .15s,box-shadow .15s}
+.lvl-card:hover{transform:translateY(-2px)}
+.lvl-card.on{box-shadow:inset 0 0 0 2px var(--lc);background:color-mix(in srgb,var(--lc) 16%,var(--panel))}
+.lvl-card.off{opacity:.5}
+.lc-head{display:flex;align-items:center;gap:10px}
+.lc-head>b{display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:50%;background:var(--lc);color:#fff;font-family:var(--display);font-weight:800}
+.lc-n{font-family:var(--black);font-size:26px;color:var(--cream);line-height:1}
+.lc-k{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.lc-change{font-size:14.5px}
+.lc-ex{font-size:13.5px;color:var(--muted)}
+.lvl-card i{font-style:normal;font-weight:700;color:var(--gold)}
+@media (max-width:800px){ .lvl-cards{grid-template-columns:1fr} }
+
 @media (max-width:1100px){ .lab-stage{min-height:460px} }
 @media (max-width:980px){
   .app{padding:6px 10px 10px;gap:10px;height:auto}

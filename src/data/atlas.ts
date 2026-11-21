@@ -563,7 +563,40 @@ export const RECETTES: Recette[] = [
   [["farine","eau","levure","feu"],"pain","La levure produit du CO₂ qui gonfle la pâte ; la cuisson fige le tout. Les trous de la mie sont des bulles de gaz."],
   [["farine","eau","feu"],"pain","Sans levure : un pain plat (pita, galette, pain azyme)."],
   [["lait","air"],"beurre","Le barattage : en battant la crème, les gouttelettes de graisse s'agglomèrent et se séparent du petit-lait."],
-  [["os","eau","feu"],"collagene","En faisant mijoter longtemps des os, le collagène se libère (et devient gélatine) : c'est le principe du bouillon."]
+  [["os","eau","feu"],"collagene","En faisant mijoter longtemps des os, le collagène se libère (et devient gélatine) : c'est le principe du bouillon."],
+
+  // --- Noyaux & étoiles (niveau subatomique : on change le noyau, donc l'élément)
+  [["Pb","foudre"],"Au","Le vrai plomb → or ! En 2025, au CERN, des noyaux de plomb (82 protons) lancés presque à la vitesse de la lumière ont perdu 3 protons en se frôlant : ils sont devenus de l'or (79 protons). Quelques milliardièmes de gramme, qui ont vécu une fraction de seconde."],
+  [["Hg","foudre"],"Au","En 1941, des physiciens ont bombardé du mercure (80 protons) avec des neutrons : une infime partie est devenue de l'or (79 protons)… radioactif. La transmutation des alchimistes existe, mais elle coûte bien plus cher que l'or obtenu."],
+  [["U","terre"],"Pb","La désintégration : enfoui dans les roches, l'uranium (92 protons) perd des morceaux de noyau, étape par étape, jusqu'à devenir du plomb (82 protons). Il faut 4,5 milliards d'années pour que la moitié y passe : c'est cette horloge qui a permis de dater la Terre.",["He"]],
+  [["Ra","terre"],"Rn","Le radium (88 protons) éjecte un petit noyau d'hélium et devient du radon (86 protons), un gaz radioactif qui s'échappe du sous-sol et s'accumule dans les caves.",["He"]],
+  [["N","soleil"],"C","Dans la haute atmosphère, les rayons cosmiques frappent les noyaux d'azote (7 protons) : l'un d'eux perd un proton et devient du carbone 14 (6 protons). C'est lui qui sert à dater les os et le bois anciens."],
+  [["He","He","He"],"C","Dans les étoiles géantes en fin de vie, trois noyaux d'hélium (2 protons chacun) fusionnent en un noyau de carbone (6 protons). Le carbone de ton corps est né ainsi, dans une étoile."],
+  [["U","U"],"Ba","La fission nucléaire : un neutron casse un noyau d'uranium 235 en deux morceaux (baryum + krypton) et libère 2 ou 3 neutrons, qui cassent les noyaux voisins : c'est la réaction en chaîne des centrales nucléaires.",["Kr"]]
+];
+
+/* Les 3 niveaux de transformation de la matière */
+export interface Niveau { n: string; e: string; c: string; change: string; ex: string }
+export const NIVEAUX: Record<1 | 2 | 3, Niveau> = {
+  1: { n: "Physique", e: "💧", c: "#3d7fb8", change: "La forme, la température ou l'état (solide, liquide, gaz). Les molécules restent les mêmes.", ex: "Faire bouillir de l'eau, fondre la roche, mélanger des métaux en alliage." },
+  2: { n: "Chimique", e: "⚗️", c: "#c7861d", change: "L'assemblage des atomes : on défait et refait des molécules. Aucun atome n'apparaît ni ne disparaît.", ex: "Brûler du bois, faire rouiller le fer, cuire du pain." },
+  3: { n: "Subatomique", e: "☢️", c: "#7b4fc4", change: "Le noyau de l'atome : changer son nombre de protons, c'est changer d'élément.", ex: "Plomb (82 protons) → or (79 protons), fusion de l'hydrogène dans le Soleil." },
+};
+/** Recettes de niveau 1 (physique) et 3 (subatomique), écrites « ingrédient+ingrédient>résultat ». Toutes les autres sont chimiques. */
+export const RECETTES_PHYSIQUES = [
+  "eau+feu>vapeur", "glace+feu>eau", "eau+air>nuage", "vapeur+air>nuage", "nuage+air>foudre", "terre+eau>boue",
+  "terre+feu>lave", "lave+air>basalte", "lave+eau>obsidienne", "terre+air>sable", "granite+eau>sable", "lumiere+eau>arc",
+  "eau+sel>eau_mer", "eau_mer+feu>sel", "eau_mer+soleil>sel",
+  "sable+feu>verre", "silice+feu>verre", "foudre+sable>fulgurite", "verre+Ag>miroir", "calcaire+terre+feu>marbre",
+  "mortier+gravier>beton", "gravier+bitume>asphalte", "gypse+papier>placo", "graphite+argile>mine",
+  "graphite+terre+feu>diamant", "C+terre+feu>diamant",
+  "Fe+C>acier", "Fe+charbon+feu>acier", "acier+Cr+Ni>inox", "acier+Cr>inox", "Fe+Cr+Ni>inox", "Cu+Sn>bronze", "Cu+Zn>laiton",
+  "Au+Ag>electrum", "Au+Ag+Cu>or18", "Ag+Cu>argent925", "Al+Cu>duralumin", "Al+Cu+Mg>duralumin", "Ce+Fe>ferrocerium", "Nd+Fe+B>aimant",
+  "petrole+feu>octane", "lait+air>beurre", "bois+eau>papier",
+];
+export const RECETTES_SUBATOMIQUES = [
+  "H+H+feu>He", "dihydrogene+soleil>He", "Pb+pierre_philo>Au",
+  "Pb+foudre>Au", "Hg+foudre>Au", "U+terre>Pb", "Ra+terre>Rn", "N+soleil>C", "He+He+He>C", "U+U>Ba",
 ];
 
 /* Thèmes du grimoire : [nom, emoji, nombre de recettes] dans l'ordre de RECETTES */
@@ -576,4 +609,5 @@ export const RECETTE_THEMES: [string, string, number][] = [
   ["Gemmes", "💎", 5],
   ["Pétrochimie & plastiques", "🛢️", 17],
   ["Vivant & cuisine", "🍞", 17],
+  ["Noyaux & étoiles", "✨", 7],
 ];

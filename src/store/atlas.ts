@@ -8,7 +8,7 @@ import { navigate, href, getRoute, subscribe } from "../router";
 import type { Rec } from "../lib/chem";
 
 export type Banner =
-  | { kind: "ok"; sel: string[]; out: string; isNew: boolean; txt: string; by: string[] }
+  | { kind: "ok"; sel: string[]; out: string; isNew: boolean; txt: string; by: string[]; lvl: 1 | 2 | 3 }
   | { kind: "fail"; sel: string[]; near: [string, number][] };
 
 export interface FocusOpts {
@@ -135,7 +135,7 @@ export const useAtlas = create<AtlasState>((set, get) => ({
     const r = BYKEY[keyOf(sel)];
     if (r) {
       const isNew = get().transmute(r);
-      set({ banner: { kind: "ok", sel, out: r.out, isNew, txt: r.txt, by: r.by } });
+      set({ banner: { kind: "ok", sel, out: r.out, isNew, txt: r.txt, by: r.by, lvl: r.lvl } });
       get().focus(r.out, { keepBanner: true });
       set({ slots: EMPTY_SLOTS });
       if (window.innerWidth <= 980) scrollToEl(".stage");

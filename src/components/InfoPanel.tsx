@@ -1,5 +1,6 @@
 /* Fiche détaillée de la matière ou de l'atome affiché */
 import { useEffect, useRef } from "react";
+import { LevelTag } from "./Levels";
 import { ALCHIMIE } from "../data/atlas";
 import {
   info, atoms, IT, EL, PRESENT, MADE, USED, sorted, pct, elColor, parseFormula, kidsOf, cousins, type Rec,
@@ -23,7 +24,10 @@ export function RecipeCard({ r }: { r: Rec }) {
         <Chip id={r.out} />
       </div>
       <p><G>{r.txt}</G></p>
-      <button className="btn small" onClick={() => tryRecipe(r.i)}>⚗ Essayer au creuset</button>
+      <div className="r-foot">
+        <button className="btn small" onClick={() => tryRecipe(r.i)}>⚗ Essayer au creuset</button>
+        <LevelTag lvl={r.lvl} />
+      </div>
     </div>
   );
 }
