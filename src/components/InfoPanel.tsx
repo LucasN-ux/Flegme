@@ -7,7 +7,7 @@ import {
 import { LAB_BY_ATLAS } from "../lib/lab";
 import { useAtlas } from "../store/atlas";
 import { useLab } from "../store/lab";
-import { scrollToEl } from "../store/ui";
+import { navigate } from "../router";
 import { ABar, Chip, Curious, Formula, G, Orb, joinNodes } from "./ui";
 import { useUi } from "../store/ui";
 
@@ -165,7 +165,7 @@ function MaterialExtras({ id }: { id: string }) {
         <div className="sec">
           <h5>Ce qu'on fabrique avec <small>{used.length} recette{used.length > 1 ? "s" : ""}</small></h5>
           {used.slice(0, 8).map((r) => <RecipeCard key={r.i} r={r} />)}
-          {used.length > 8 && <p className="dim small">… et {used.length - 8} autres dans le grimoire, en bas de la page.</p>}
+          {used.length > 8 && <p className="dim small">… et {used.length - 8} autres dans le grimoire.</p>}
         </div>
       )}
     </>
@@ -185,7 +185,8 @@ export function InfoPanel() {
 
   const openInLab = () => {
     useLab.getState().load([labId]);
-    scrollToEl("#lab");
+    navigate("/labo");
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   return (
@@ -194,7 +195,7 @@ export function InfoPanel() {
         <Orb id={cur} size="lg" />
         <div><h2>{i.name}</h2><div className="cat" style={{ color: i.c }}>{i.catName}</div></div>
       </div>
-      {labId && <button className="btn small labgo" onClick={openInLab}>⚛ Voir sa molécule au laboratoire ↓</button>}
+      {labId && <button className="btn small labgo" onClick={openInLab}>⚛ Voir sa molécule au labo</button>}
       {banner?.kind === "ok" && (
         <div className="note gold">
           <b>✦ Transmutation : {banner.sel.map((id) => info(id).name).join(" + ")} → {info(banner.out).name}</b>

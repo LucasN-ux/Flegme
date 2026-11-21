@@ -147,8 +147,8 @@ function Tray() {
         </div>
         <div className="tray-btns">
           <button className="btn gold" disabled={!sel.length} onClick={mix}>Mélanger</button>
-          <button className="btn" onClick={clearSlots}>Vider</button>
-          <button className="btn" title="Un indice au hasard" onClick={randomHint}>☩ Indice</button>
+          <button className="btn" title="Vider le creuset" onClick={clearSlots}><span className="ico-m">✕</span><span className="lbl">Vider</span></button>
+          <button className="btn" title="Un indice au hasard" onClick={randomHint}>☩<span className="lbl"> Indice</span></button>
         </div>
       </div>
       <Hints sel={sel} />

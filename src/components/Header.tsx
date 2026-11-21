@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { search, info } from "../lib/chem";
 import { useAtlas } from "../store/atlas";
 import { useUi } from "../store/ui";
+import { Link, TopTabs } from "./Nav";
 import { Orb } from "./ui";
 
 function Search() {
@@ -131,9 +132,9 @@ export function Welcome() {
     <div className="welcome">
       <div className="w-intro"><b>Bienvenue !</b> Tout ce qui t'entoure est fait d'une centaine de sortes d'atomes. Ce site te montre lesquels, et comment les matières se transforment.</div>
       <ol>
-        <li><b>1</b><span><i>Explore</i> — choisis une matière à gauche (ou cherche-la en haut). Clique les bulles du schéma pour voir de quoi elle est faite.</span></li>
-        <li><b>2</b><span><i>Transforme</i> — glisse 2 à 4 ingrédients dans le <a href="#atlas">creuset</a> et clique « Mélanger ». Ex. sable + feu = verre.</span></li>
-        <li><b>3</b><span><i>Consulte</i> — toutes les recettes sont dans le <a href="#grimoire">grimoire</a>. Les mots <span className="gl" data-tip="Comme ceci : passe la souris dessus pour une définition simple.">soulignés en pointillés</span> s'expliquent au survol.</span></li>
+        <li><b>1</b><span><i>Explore</i> — choisis une matière dans la liste (ou cherche-la en haut). Touche les bulles du schéma pour voir de quoi elle est faite.</span></li>
+        <li><b>2</b><span><i>Transforme</i> — mets 2 à 4 ingrédients dans le creuset (glisse-les, ou touche le <b className="gold-t">＋</b> à côté) puis « Mélanger ». Ex. sable + feu = verre.</span></li>
+        <li><b>3</b><span><i>Consulte</i> — toutes les recettes sont dans le <Link to={{ page: "grimoire" }}>grimoire</Link>. Les mots <span className="gl" data-tip="Comme ceci : passe la souris dessus pour une définition simple.">soulignés en pointillés</span> s'expliquent au survol (ou au toucher).</span></li>
       </ol>
       <button className="x" onClick={close} title="Masquer">✕</button>
     </div>
@@ -160,9 +161,7 @@ export function Header() {
         <li><b>2</b> Clique les bulles pour descendre jusqu'aux atomes</li>
         <li><b>3</b> Glisse des ingrédients dans le creuset pour en créer d'autres</li>
       </ol>
-      <nav className="jump">
-        <a href="#atlas">Atlas</a><a href="#lab">Laboratoire</a><a href="#grimoire">Grimoire</a><a href="#traditions">Traditions</a><a href="#lexique">Lexique</a>
-      </nav>
+      <TopTabs />
       <ModeToggle />
       <Search />
     </header>

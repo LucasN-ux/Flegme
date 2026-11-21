@@ -4,6 +4,8 @@ import {
 } from "../lib/chem";
 import { MATIERES } from "../data/atlas";
 import { toast, scrollToEl } from "./ui";
+import { navigate, href, getRoute, subscribe } from "../router";
+import type { Rec } from "../lib/chem";
 
 export type Banner =
   | { kind: "ok"; sel: string[]; out: string; isNew: boolean; txt: string; by: string[] }
@@ -15,6 +17,8 @@ export interface FocusOpts {
   back?: boolean;
   keepBanner?: boolean;
   scroll?: boolean;
+  /** changement venu de l'URL (bouton retour…) : ne pas réécrire l'historique */
+  fromUrl?: boolean;
 }
 
 const EMPTY_SLOTS: (string | null)[] = [null, null, null, null];
@@ -47,6 +51,8 @@ interface AtlasState {
 
   slots: (string | null)[];
   found: Set<number>;
+  /** recette affichée en fenêtre (lancée hors de l'atlas) */
+  modal: { r: Rec; isNew: boolean } | null;
 
   focus: (id: string, opts?: FocusOpts) => void;
   goBack: () => void;
@@ -57,6 +63,9 @@ interface AtlasState {
   clearSlots: () => void;
   mix: () => void;
   tryRecipe: (i: number) => void;
+  /** enregistre une recette réussie ; renvoie true si c'est une nouvelle découverte */
+  transmute: (r: Rec) => boolean;
+  closeModal: () => void;
   randomHint: () => void;
 }
 
@@ -69,6 +78,7 @@ export const useAtlas = create<AtlasState>((set, get) => ({
   pulseTick: 0,
   slots: EMPTY_SLOTS,
   found: loadFound(),
+  modal: null,
 
   focus: (id, opts = {}) => {
     if (!exists(id)) return;
@@ -78,8 +88,12 @@ export const useAtlas = create<AtlasState>((set, get) => ({
     else if (opts.crumb != null) path = path.slice(0, opts.crumb + 1);
     else if (opts.back) path = path.slice(0, -1);
     else path = [id];
-    set((s) => ({ cur: id, path, banner: opts.keepBanner ? s.banner : null, focusTick: s.focusTick + 1 }));
-    if (opts.scroll) scrollToEl(".app");
+    set((s) => ({ cur: id, path, banner: opts.keepBanner ? s.banner : null, focusTick: s.focusTick + 1, modal: null }));
+    if (!opts.fromUrl) {
+      const wasAtlas = getRoute().page === "atlas";
+      navigate(href({ page: "atlas", id }));
+      if (!wasAtlas || opts.scroll) window.scrollTo({ top: 0, behavior: wasAtlas ? "smooth" : "instant" });
+    }
   },
 
   goBack: () => {
@@ -120,13 +134,11 @@ export const useAtlas = create<AtlasState>((set, get) => ({
     }
     const r = BYKEY[keyOf(sel)];
     if (r) {
-      const found = new Set(get().found);
-      const isNew = !found.has(r.i);
-      found.add(r.i);
-      saveFound(found);
-      set({ found, banner: { kind: "ok", sel, out: r.out, isNew, txt: r.txt, by: r.by } });
+      const isNew = get().transmute(r);
+      set({ banner: { kind: "ok", sel, out: r.out, isNew, txt: r.txt, by: r.by } });
       get().focus(r.out, { keepBanner: true });
       set({ slots: EMPTY_SLOTS });
+      if (window.innerWidth <= 980) scrollToEl(".stage");
     } else {
       const mixA: Counts = {};
       let n = 0;
@@ -146,16 +158,33 @@ export const useAtlas = create<AtlasState>((set, get) => ({
             .slice(0, 4)
         : [];
       set({ banner: { kind: "fail", sel, near } });
+      if (window.innerWidth <= 980) scrollToEl(".stage");
     }
   },
 
   tryRecipe: (i) => {
     const r = RECS[i];
     if (!r) return;
+    if (getRoute().page !== "atlas") {
+      // hors de l'atlas : on montre le résultat sur place, sans changer de page
+      set({ modal: { r, isNew: get().transmute(r) } });
+      return;
+    }
     set({ slots: pad(r.ins) });
-    scrollToEl(".app");
+    scrollToEl(".stage");
     setTimeout(() => get().mix(), 450);
   },
+
+  transmute: (r) => {
+    const found = new Set(get().found);
+    const isNew = !found.has(r.i);
+    found.add(r.i);
+    saveFound(found);
+    set({ found });
+    return isNew;
+  },
+
+  closeModal: () => set({ modal: null }),
 
   randomHint: () => {
     const { found } = get();
@@ -167,3 +196,21 @@ export const useAtlas = create<AtlasState>((set, get) => ({
     toast(`Indice : ${info(r.ins[0]).name} + ${more} autre${more > 1 ? "s" : ""} ingrédient${more > 1 ? "s" : ""}…`);
   },
 }));
+
+/* ---------- synchronisation avec l'URL ---------- */
+function syncFromUrl() {
+  const route = getRoute();
+  if (route.page !== "atlas") return;
+  const st = useAtlas.getState();
+  const id = route.id ?? "terre";
+  if (!exists(id)) {
+    navigate("/", { replace: true });
+    return;
+  }
+  if (id === st.cur) return;
+  const k = st.path.indexOf(id);
+  if (k >= 0) st.focus(id, { crumb: k, fromUrl: true });
+  else st.focus(id, { fromUrl: true });
+}
+syncFromUrl();
+subscribe(syncFromUrl);

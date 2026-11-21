@@ -42,8 +42,8 @@ export function Grimoire() {
       <div className="motto">Solve et coagula <span>— dissous, puis assemble</span></div>
       <h2 className="big" id="grimoire">Le grimoire des recettes</h2>
       <p className="sec-sub">
-        Les {RECS.length} recettes du creuset, toutes consultables. Clique <b>« Essayer au creuset »</b> pour voir la transformation se faire là-haut, ou
-        clique un ingrédient pour en savoir plus. Celles que tu as réussies toi-même sont marquées <b className="gold-t">✓ trouvée</b>.
+        Les {RECS.length} recettes du creuset, toutes consultables. Clique <b>« Essayer au creuset »</b> pour voir le résultat, ou
+        touche un ingrédient pour ouvrir sa fiche. Celles que tu as réussies toi-même sont marquées <b className="gold-t">✓ trouvée</b>.
       </p>
 
       <div className="grim-tools">

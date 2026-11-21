@@ -13,12 +13,16 @@ function LibRow({ id, cur, showCat }: { id: string; cur: string; showCat?: boole
   const focus = useAtlas((s) => s.focus);
   const m = MATIERES.find((x) => x.id === id);
   const style = showCat && m ? cssVars({ "--c": CATS[m.cat].c }) : undefined;
+  const add = useAtlas((s) => s.addToCauldron);
   return (
-    <button className={`lib-row${cur === id ? " on" : ""}`} style={style} onClick={() => focus(id)} {...dragProps(id)}>
-      <Orb id={id} />
-      <span className="nm">{info(id).name}</span>
-      {hasAtoms(id) ? <ABar a={atoms(id)} /> : <span className="dim small">✦</span>}
-    </button>
+    <div className="lib-item">
+      <button className={`lib-row${cur === id ? " on" : ""}`} style={style} onClick={() => focus(id)} {...dragProps(id)}>
+        <Orb id={id} />
+        <span className="nm">{info(id).name}</span>
+        {hasAtoms(id) ? <ABar a={atoms(id)} /> : <span className="dim small">✦</span>}
+      </button>
+      <button className="add-btn" title={`Mettre ${info(id).name} dans le creuset`} aria-label={`Mettre ${info(id).name} dans le creuset`} onClick={() => add(id)}>＋</button>
+    </div>
   );
 }
 

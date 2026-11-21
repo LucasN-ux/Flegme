@@ -104,7 +104,7 @@ export function Traditions() {
     <section className="lower" id="traditions">
       <div className="motto">Quod est inferius est sicut quod est superius <span>— ce qui est en bas est comme ce qui est en haut</span></div>
       <h2 className="big">Les traditions</h2>
-      <p className="sec-sub">Avant les atomes, on expliquait le monde avec quelques « éléments ». Clique n'importe lequel : il s'ouvre dans le graphe là-haut.</p>
+      <p className="sec-sub">Avant les atomes, on expliquait le monde avec quelques « éléments ». Clique n'importe lequel : il s'ouvre dans l'atlas.</p>
       <div className="greek">
         {GREEK.map(([id, c, sci]) => {
           const m = IT[id];

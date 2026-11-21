@@ -461,3 +461,91 @@ html{scroll-behavior:smooth}
 .lex{border:1px solid var(--line);background:rgba(12,12,11,.8);padding:10px 12px}
 .lex dt{font-family:var(--display);color:var(--gold2);letter-spacing:.06em;margin-bottom:4px}
 .lex dd{margin:0;color:var(--muted);font-size:15px}
+
+/* ============================================================
+   NAVIGATION PAR PAGES, MOBILE, FENÊTRE DE RECETTE
+   ============================================================ */
+html{scroll-behavior:auto}
+.page{min-height:calc(100vh - 66px)}
+.page-labo .labsec{border-bottom:0}
+.jump a.on{color:var(--gold2);border-color:var(--gold)}
+
+/* barre d'onglets mobile */
+.tabbar{display:none}
+@media (max-width:700px){
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:250;background:rgba(8,8,8,.97);border-top:1px solid var(--line2);padding:4px 2px calc(4px + env(safe-area-inset-bottom));backdrop-filter:blur(8px)}
+  .tabbar a{display:flex;flex-direction:column;align-items:center;gap:1px;text-decoration:none;color:var(--muted);font-family:var(--display);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:4px 0}
+  .tabbar a .ti{font-size:19px;filter:grayscale(.7);opacity:.7}
+  .tabbar a.on{color:var(--gold2)}
+  .tabbar a.on .ti{filter:none;opacity:1}
+  body{padding-bottom:calc(62px + env(safe-area-inset-bottom))}
+  .toast{bottom:150px}
+  .mode-toggle span{padding:4px 7px}
+}
+
+/* bouton « ＋ » pour ajouter au creuset sans glisser */
+.lib-item{display:flex;align-items:center}
+.lib-item .lib-row{flex:1;min-width:0}
+.add-btn{flex:none;width:26px;height:26px;margin-left:3px;border:1px solid var(--line2);border-radius:50%;color:var(--gold);font-size:13px;display:grid;place-items:center;opacity:0;transition:opacity .15s}
+.lib-item:hover .add-btn,.add-btn:focus-visible{opacity:1}
+.add-btn:hover{border-color:var(--gold);background:rgba(233,185,73,.12)}
+.add-btn:active{transform:scale(.9)}
+@media (hover:none){ .add-btn{opacity:1;width:34px;height:34px;font-size:15px} }
+
+/* boutons du creuset : libellés courts sur petit écran */
+.ico-m{display:none}
+
+/* creuset toujours visible en bas sur tablette / mobile */
+@media (max-width:980px){
+  .page-atlas .tray{position:fixed;left:0;right:0;bottom:0;z-index:240;background:rgba(11,10,9,.97);border-top:1px solid var(--gold);padding:8px 10px calc(8px + env(safe-area-inset-bottom));backdrop-filter:blur(8px);box-shadow:0 -12px 30px rgba(0,0,0,.7)}
+  .page-atlas .app{padding-bottom:110px}
+  .page-atlas footer{padding-bottom:110px}
+  .tray-head{display:none}
+  .tray-row{flex-wrap:nowrap;gap:8px}
+  .slots{flex:1;min-width:0;gap:5px}
+  .slot{flex:1;width:auto;min-width:0;height:46px;justify-content:center}
+  .slot small{display:none}
+  .slot.full .orb{margin:auto}
+  .tray-btns{flex:none;gap:5px}
+  .tray-btns .btn{padding:8px 10px}
+  .tray-btns .lbl{display:none}
+  .ico-m{display:inline}
+  #hints p{display:none}
+  #hints .chips{flex-wrap:nowrap;overflow-x:auto;margin-top:6px;padding-bottom:2px;scrollbar-width:none}
+  #hints .chips::-webkit-scrollbar{display:none}
+  #hints .chips .dim{flex:none}
+}
+@media (max-width:700px){
+  .page-atlas .tray{bottom:calc(58px + env(safe-area-inset-bottom));padding-bottom:8px}
+}
+
+/* fenêtre de résultat de recette */
+.modal-bg{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:16px;opacity:0;animation:fadein .2s both}
+.modal{position:relative;max-width:560px;width:100%;max-height:88vh;overflow:auto;background:#0c0b0a;border:1px solid var(--gold);padding:22px 22px 18px;box-shadow:0 30px 80px #000;animation:pop .4s cubic-bezier(.2,1.4,.4,1)}
+.modal .x{position:absolute;top:10px;right:12px;color:var(--muted);font-size:16px}
+.modal .tag{font-family:var(--display);font-size:10px;letter-spacing:.16em;text-transform:uppercase;background:var(--gold);color:#000;padding:2px 7px;font-weight:700}
+.modal .tag.dim{background:var(--dim);color:#eee}
+.m-eq{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin:20px 0 12px}
+.m-eq .op{color:var(--gold)}
+.m-eq .op.big{font-size:26px}
+.m-ing,.m-out{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center}
+.m-ing{animation:pop .4s cubic-bezier(.2,1.4,.4,1) both}
+.m-ing small{font-size:13px;color:var(--muted);max-width:90px;line-height:1.15}
+.m-out{animation:pop .6s .35s cubic-bezier(.2,1.6,.4,1) both}
+.m-out b{font-family:var(--display);color:var(--gold2);letter-spacing:.06em}
+.m-txt{font-size:16.5px;margin:8px 0}
+.m-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+
+/* en-tête sur petit écran : la recherche passe sur une 2e ligne, rien ne déborde */
+html,body{overflow-x:clip}
+@media (max-width:700px){
+  header.top{flex-wrap:wrap;row-gap:8px}
+  .brand{flex:1;min-width:0}
+  .brand-logo{width:30px;height:30px}
+  .mode-toggle{margin-left:auto}
+  header.top .search{order:3;flex:1 1 100%;width:100%;margin:0}
+  .search-res{left:0;right:0;width:auto}
+  .welcome{padding:12px 40px 12px 12px}
+}
+.stage{scroll-margin-top:72px}
+@media (max-width:700px){ .stage{scroll-margin-top:104px} }
