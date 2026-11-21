@@ -1,7 +1,7 @@
 /* ============================================================
    Logique pure de l'atlas : éléments, matières, atomes, recettes
    ============================================================ */
-import { FAMILLES, ELEMENTS_RAW, MATIERES, CATS, RECETTES } from "../data/atlas";
+import { FAMILLES, ELEMENTS_RAW, MATIERES, CATS, RECETTES, RECETTE_THEMES } from "../data/atlas";
 import type { Matiere } from "../data/types";
 
 export type Counts = Record<string, number>;
@@ -198,9 +198,19 @@ export interface Rec {
   txt: string;
   by: string[];
   key: string;
+  /** index du thème dans RECETTE_THEMES */
+  theme: number;
 }
 export const keyOf = (arr: string[]): string => [...arr].sort().join("+");
-export const RECS: Rec[] = RECETTES.map((r, i) => ({ i, ins: r[0], out: r[1], txt: r[2], by: r[3] || [], key: keyOf(r[0]) }));
+const themeOf = (i: number): number => {
+  let start = 0;
+  for (let t = 0; t < RECETTE_THEMES.length; t++) {
+    start += RECETTE_THEMES[t][2];
+    if (i < start) return t;
+  }
+  return RECETTE_THEMES.length - 1;
+};
+export const RECS: Rec[] = RECETTES.map((r, i) => ({ i, ins: r[0], out: r[1], txt: r[2], by: r[3] || [], key: keyOf(r[0]), theme: themeOf(i) }));
 export const BYKEY: Record<string, Rec> = {};
 RECS.forEach((r) => { if (!BYKEY[r.key]) BYKEY[r.key] = r; });
 export const USED: Record<string, Rec[]> = {};

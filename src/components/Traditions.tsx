@@ -1,10 +1,8 @@
 /* Traditions (Grèce, Wu Xing, métaux planétaires, Paracelse) et grimoire des recettes */
-import { useState } from "react";
 import { ALCHIMIE } from "../data/atlas";
-import { IT, EL, elColor, info, RECS } from "../lib/chem";
+import { IT, EL, elColor, info } from "../lib/chem";
 import { useAtlas } from "../store/atlas";
-import { RecipeCard } from "./InfoPanel";
-import { Chip, Orb, cssVars } from "./ui";
+import { Orb, cssVars } from "./ui";
 
 const openScroll = (id: string) => useAtlas.getState().focus(id, { scroll: true });
 
@@ -101,40 +99,6 @@ const TRIA: [string, string, string, string, string][] = [
   ["sel", "Sel", "le corps", "Ce qui reste, solide, après le feu.", "Les cendres sont bien des sels minéraux."],
 ];
 
-function Grimoire() {
-  const found = useAtlas((s) => s.found);
-  const [reveal, setReveal] = useState(false);
-  return (
-    <>
-      <div className="motto" style={{ marginTop: 60 }}>Solve et coagula <span>— dissous, puis assemble</span></div>
-      <h2 className="big" id="grimoire">Le grimoire des recettes</h2>
-      <div className="grim-head">
-        <p className="sec-sub" style={{ margin: 0 }}>Chaque recette réussie au creuset s'inscrit ici (gardé dans ce navigateur).</p>
-        <div className="grim-ctl">
-          <span className="mono">{found.size} / {RECS.length}</span>
-          <div className="progress"><i style={{ width: `${(found.size / RECS.length) * 100}%` }} /></div>
-          <label><input type="checkbox" checked={reveal} onChange={(e) => setReveal(e.target.checked)} /> Tout révéler</label>
-        </div>
-      </div>
-      <div className="grim-list">
-        {RECS.map((r) =>
-          found.has(r.i) || reveal ? (
-            <RecipeCard key={r.i} r={r} />
-          ) : (
-            <div key={r.i} className="recipe lock">
-              <div className="eq">
-                <Chip id={r.ins[0]} />
-                {r.ins.slice(1).map((_, k) => <span key={k} style={{ display: "contents" }}><span className="op">+</span><span className="q">?</span></span>)}
-                <span className="op">→</span><span className="q">?</span>
-              </div>
-            </div>
-          ),
-        )}
-      </div>
-    </>
-  );
-}
-
 export function Traditions() {
   return (
     <section className="lower" id="traditions">
@@ -193,7 +157,6 @@ export function Traditions() {
         ))}
       </div>
 
-      <Grimoire />
     </section>
   );
 }

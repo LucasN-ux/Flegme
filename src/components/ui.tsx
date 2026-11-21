@@ -3,6 +3,7 @@ import type { CSSProperties, DragEvent, ReactNode } from "react";
 import { info, sorted, elColor, EL, pct, formulaParts, type Counts } from "../lib/chem";
 import { useAtlas, type FocusOpts } from "../store/atlas";
 import { useUi } from "../store/ui";
+import { GLOSS_RE, lookup } from "../lib/glossary";
 
 /** Variable CSS personnalisée (--c, --a…) dans un objet style typé. */
 export const cssVars = (vars: Record<string, string | number>): CSSProperties => vars as CSSProperties;
@@ -78,4 +79,33 @@ export function joinNodes(nodes: ReactNode[], sep: (k: number) => ReactNode): Re
     out.push(n);
   });
   return out;
+}
+
+/** Texte avec les mots techniques soulignés : définition simple au survol (1re occurrence de chaque mot). */
+export function G({ children }: { children: string }) {
+  const out: ReactNode[] = [];
+  const seen = new Set<string>();
+  let last = 0;
+  for (const m of children.matchAll(GLOSS_RE)) {
+    const hit = lookup(m[0]);
+    if (!hit || seen.has(hit.word)) continue;
+    seen.add(hit.word);
+    out.push(children.slice(last, m.index));
+    out.push(<span key={m.index} className="gl" data-tip={`${hit.word} : ${hit.def}`}>{m[0]}</span>);
+    last = m.index! + m[0].length;
+  }
+  out.push(children.slice(last));
+  return <>{out}</>;
+}
+
+/** Section repliable « pour les curieux » (ouverte d'office en mode expert). */
+export function Curious({ title = "🔬 Pour les curieux", children }: { title?: string; children: ReactNode }) {
+  const simple = useUi((s) => s.simple);
+  if (!simple) return <>{children}</>;
+  return (
+    <details className="curious">
+      <summary>{title}</summary>
+      {children}
+    </details>
+  );
 }

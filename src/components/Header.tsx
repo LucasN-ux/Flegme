@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { search, info } from "../lib/chem";
 import { useAtlas } from "../store/atlas";
+import { useUi } from "../store/ui";
 import { Orb } from "./ui";
 
 function Search() {
@@ -101,6 +102,44 @@ export function Sigil() {
   );
 }
 
+function ModeToggle() {
+  const simple = useUi((s) => s.simple);
+  const setSimple = useUi((s) => s.setSimple);
+  return (
+    <button
+      className="mode-toggle"
+      onClick={() => setSimple(!simple)}
+      title={simple ? "Afficher tous les détails techniques (formules, énergies…)" : "Replier les détails techniques"}
+    >
+      <span className={simple ? "on" : ""}>Simple</span><span className={simple ? "" : "on"}>Expert</span>
+    </button>
+  );
+}
+
+const WELCOME_KEY = "atlas-accueil-vu";
+
+export function Welcome() {
+  const [hidden, setHidden] = useState(() => {
+    try { return localStorage.getItem(WELCOME_KEY) === "1"; } catch { return false; }
+  });
+  if (hidden) return null;
+  const close = () => {
+    try { localStorage.setItem(WELCOME_KEY, "1"); } catch { /* ignoré */ }
+    setHidden(true);
+  };
+  return (
+    <div className="welcome">
+      <div className="w-intro"><b>Bienvenue !</b> Tout ce qui t'entoure est fait d'une centaine de sortes d'atomes. Ce site te montre lesquels, et comment les matières se transforment.</div>
+      <ol>
+        <li><b>1</b><span><i>Explore</i> — choisis une matière à gauche (ou cherche-la en haut). Clique les bulles du schéma pour voir de quoi elle est faite.</span></li>
+        <li><b>2</b><span><i>Transforme</i> — glisse 2 à 4 ingrédients dans le <a href="#atlas">creuset</a> et clique « Mélanger ». Ex. sable + feu = verre.</span></li>
+        <li><b>3</b><span><i>Consulte</i> — toutes les recettes sont dans le <a href="#grimoire">grimoire</a>. Les mots <span className="gl" data-tip="Comme ceci : passe la souris dessus pour une définition simple.">soulignés en pointillés</span> s'expliquent au survol.</span></li>
+      </ol>
+      <button className="x" onClick={close} title="Masquer">✕</button>
+    </div>
+  );
+}
+
 export function Header() {
   return (
     <header className="top">
@@ -116,14 +155,15 @@ export function Header() {
           <small>Tout n'est que poussière d'étoiles — et tout y retournera</small>
         </div>
       </div>
-      <ol className="howto">
+      <ol className="howto" hidden>
         <li><b>1</b> Choisis une matière ou un atome</li>
         <li><b>2</b> Clique les bulles pour descendre jusqu'aux atomes</li>
         <li><b>3</b> Glisse des ingrédients dans le creuset pour en créer d'autres</li>
       </ol>
       <nav className="jump">
-        <a href="#atlas">Atlas</a><a href="#lab">Laboratoire</a><a href="#traditions">Traditions</a><a href="#grimoire">Grimoire</a>
+        <a href="#atlas">Atlas</a><a href="#lab">Laboratoire</a><a href="#grimoire">Grimoire</a><a href="#traditions">Traditions</a><a href="#lexique">Lexique</a>
       </nav>
+      <ModeToggle />
       <Search />
     </header>
   );

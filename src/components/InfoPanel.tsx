@@ -8,19 +8,22 @@ import { LAB_BY_ATLAS } from "../lib/lab";
 import { useAtlas } from "../store/atlas";
 import { useLab } from "../store/lab";
 import { scrollToEl } from "../store/ui";
-import { ABar, Chip, Formula, Orb, joinNodes } from "./ui";
+import { ABar, Chip, Curious, Formula, G, Orb, joinNodes } from "./ui";
+import { useUi } from "../store/ui";
 
 export function RecipeCard({ r }: { r: Rec }) {
   const tryRecipe = useAtlas((s) => s.tryRecipe);
+  const found = useAtlas((s) => s.found.has(r.i));
   return (
-    <div className="recipe">
+    <div className={`recipe${found ? " found" : ""}`}>
+      {found && <span className="rbadge" title="Tu as déjà réussi cette recette au creuset">✓ trouvée</span>}
       <div className="eq">
         {joinNodes(r.ins.map((id, k) => <Chip key={`i${k}`} id={id} />), (k) => <span key={`p${k}`} className="op">+</span>)}
         <span className="op">→</span>
         <Chip id={r.out} />
       </div>
-      <p>{r.txt}</p>
-      <button className="btn small" onClick={() => tryRecipe(r.i)}>⚗ Faire au creuset</button>
+      <p><G>{r.txt}</G></p>
+      <button className="btn small" onClick={() => tryRecipe(r.i)}>⚗ Essayer au creuset</button>
     </div>
   );
 }
@@ -64,7 +67,14 @@ function ElementDetails({ id }: { id: string }) {
   const to = al ? (al.astre === "Soleil" ? "au Soleil" : al.astre === "Lune" ? "à la Lune" : "à " + al.astre) : "";
   return (
     <>
-      <p className="desc">{e.note}</p>
+      <p className="desc"><G>{e.note}</G></p>
+      {pr.length > 0 && (
+        <div className="sec">
+          <h5>Où on le trouve <small>part du poids de chaque matière</small></h5>
+          <div className="comp-list">{pr.slice(0, 20).map(([mid, v]) => <CompRow key={mid} id={mid} v={v} />)}</div>
+        </div>
+      )}
+      <Curious title="🔬 Carte d'identité de l'atome">
       <div className="kv">
         <div><small>N° atomique</small><b>{e.z}</b></div>
         <div><small>Masse</small><b>{String(e.m).replace(".", ",")}</b></div>
@@ -73,62 +83,89 @@ function ElementDetails({ id }: { id: string }) {
         <div><small>Groupe</small><b>{e.group || "—"}</b></div>
         <div><small>Radioactif</small><b>{e.radio ? "oui ☢" : "non"}</b></div>
       </div>
+      </Curious>
       {al && <div className="note">{al.sym} <b>Alchimie :</b> l'un des 7 métaux connus depuis l'Antiquité, associé {to}.</div>}
-      {pr.length > 0 && (
-        <div className="sec">
-          <h5>Présent dans <small>{pr.length} matière{pr.length > 1 ? "s" : ""} · part de leur masse</small></h5>
-          <div className="comp-list">{pr.slice(0, 20).map(([mid, v]) => <CompRow key={mid} id={mid} v={v} />)}</div>
-        </div>
-      )}
     </>
   );
 }
 
 function MaterialDetails({ id }: { id: string }) {
   const focus = useAtlas((s) => s.focus);
+  const simple = useUi((s) => s.simple);
   const m = IT[id], a = atoms(id);
   const cz = cousins(id);
   return (
     <>
-      <p className="desc">{m.d}</p>
-      {m.note && <p className="desc dim">{m.note}</p>}
-      {m.x && <div className="note">✦ <b>Indivisible.</b> {m.x}</div>}
-      {m.s && <div className="sec"><h5>Structure</h5><div className="note">{m.s}</div></div>}
-      {m.f && (
-        <div className="sec">
-          <h5>La molécule</h5>
-          <div className="formula"><Formula f={m.f} /></div>
-          <Balls f={m.f} />
-        </div>
-      )}
+      <p className="desc"><G>{m.d}</G></p>
+      {m.note && <p className="desc dim"><G>{m.note}</G></p>}
+      {m.x && <div className="note">✦ <b>Indivisible.</b> <G>{m.x}</G></div>}
       {m.c && (
         <div className="sec">
-          <h5>Fait de <small>% de la masse</small></h5>
+          <h5>{simple ? "De quoi c'est fait" : "Fait de"} <small>{simple ? "part du poids total" : "% de la masse"}</small></h5>
           <div className="comp-list">{kidsOf(id).list.map((k) => <CompRow key={k.id} id={k.id} v={k.frac ?? 0} />)}</div>
         </div>
       )}
-      {Object.keys(a).length > 0 && (
+      {m.f && simple && (
         <div className="sec">
-          <h5>Jusqu'aux atomes</h5>
-          <ABar a={a} big />
-          <div className="atom-leg">
-            {sorted(a).slice(0, 10).map(([s, v]) => (
-              <button key={s} onClick={() => focus(s)}>
-                <span className="sw" style={{ background: elColor(s) }} />{EL[s].n}<span className="v">{pct(v)}</span>
-              </button>
-            ))}
-          </div>
+          <h5>La molécule <small>les atomes qui la composent</small></h5>
+          <Balls f={m.f} />
         </div>
       )}
-      {cz.length > 0 && (
-        <div className="sec">
-          <h5>Même recette atomique <small>matières aux atomes les plus proches</small></h5>
-          <div className="chips">
-            {cz.map(([cid, v]) => <Chip key={cid} id={cid}><b>{v > 0.995 ? "identique" : Math.round(v * 100) + " %"}</b></Chip>)}
+      <MaterialExtras id={id} />
+      <Curious>
+        {m.s && <div className="sec"><h5>Comment c'est organisé</h5><div className="note"><G>{m.s}</G></div></div>}
+        {m.f && (
+          <div className="sec">
+            <h5>Formule chimique</h5>
+            <div className="formula"><Formula f={m.f} /></div>
+            {!simple && <Balls f={m.f} />}
           </div>
-          {cz.some((c) => c[1] > 0.995) && (
-            <p className="dim small">« Identique » : mêmes atomes, mêmes proportions… mais arrangés autrement (comme le diamant et le graphite).</p>
-          )}
+        )}
+        {Object.keys(a).length > 0 && (
+          <div className="sec">
+            <h5>Jusqu'aux atomes <small>part du poids de chaque atome</small></h5>
+            <ABar a={a} big />
+            <div className="atom-leg">
+              {sorted(a).slice(0, 10).map(([s, v]) => (
+                <button key={s} onClick={() => focus(s)}>
+                  <span className="sw" style={{ background: elColor(s) }} />{EL[s].n}<span className="v">{pct(v)}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {cz.length > 0 && (
+          <div className="sec">
+            <h5>Matières cousines <small>faites des mêmes atomes</small></h5>
+            <div className="chips">
+              {cz.map(([cid, v]) => <Chip key={cid} id={cid}><b>{v > 0.995 ? "identique" : Math.round(v * 100) + " %"}</b></Chip>)}
+            </div>
+            {cz.some((c) => c[1] > 0.995) && (
+              <p className="dim small">« Identique » : mêmes atomes, mêmes proportions… mais arrangés autrement (comme le diamant et le graphite).</p>
+            )}
+          </div>
+        )}
+      </Curious>
+    </>
+  );
+}
+
+/** Recettes : comment le fabriquer, ce qu'on fabrique avec. */
+function MaterialExtras({ id }: { id: string }) {
+  const made = MADE[id] || [], used = USED[id] || [];
+  return (
+    <>
+      {made.length > 0 && (
+        <div className="sec">
+          <h5>Comment le fabriquer <small>{made.length} recette{made.length > 1 ? "s" : ""}</small></h5>
+          {made.map((r) => <RecipeCard key={r.i} r={r} />)}
+        </div>
+      )}
+      {used.length > 0 && (
+        <div className="sec">
+          <h5>Ce qu'on fabrique avec <small>{used.length} recette{used.length > 1 ? "s" : ""}</small></h5>
+          {used.slice(0, 8).map((r) => <RecipeCard key={r.i} r={r} />)}
+          {used.length > 8 && <p className="dim small">… et {used.length - 8} autres dans le grimoire, en bas de la page.</p>}
         </div>
       )}
     </>
@@ -141,7 +178,6 @@ export function InfoPanel() {
   const ref = useRef<HTMLElement>(null);
   const i = info(cur);
   const labId = LAB_BY_ATLAS[cur];
-  const made = MADE[cur] || [], used = USED[cur] || [];
 
   useEffect(() => {
     if (ref.current) ref.current.scrollTop = 0;
@@ -163,24 +199,11 @@ export function InfoPanel() {
         <div className="note gold">
           <b>✦ Transmutation : {banner.sel.map((id) => info(id).name).join(" + ")} → {info(banner.out).name}</b>
           <br />
-          {banner.txt}
+          <G>{banner.txt}</G>
           {banner.by.length > 0 && <> <span className="dim">(Sous-produits : {banner.by.map((b) => info(b).name).join(", ")}.)</span></>}
         </div>
       )}
-      {i.kind === "el" ? <ElementDetails id={cur} /> : <MaterialDetails id={cur} />}
-      {made.length > 0 && (
-        <div className="sec">
-          <h5>Comment le fabriquer <small>{made.length} recette{made.length > 1 ? "s" : ""}</small></h5>
-          {made.map((r) => <RecipeCard key={r.i} r={r} />)}
-        </div>
-      )}
-      {used.length > 0 && (
-        <div className="sec">
-          <h5>Ce qu'on fabrique avec <small>{used.length} recette{used.length > 1 ? "s" : ""}</small></h5>
-          {used.slice(0, 8).map((r) => <RecipeCard key={r.i} r={r} />)}
-          {used.length > 8 && <p className="dim small">… et {used.length - 8} autres à trouver au creuset.</p>}
-        </div>
-      )}
+      {i.kind === "el" ? <><ElementDetails id={cur} /><MaterialExtras id={cur} /></> : <MaterialDetails id={cur} />}
     </aside>
   );
 }

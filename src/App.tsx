@@ -1,5 +1,7 @@
 import { useEffect } from "react";
-import { Header, Sigil } from "./components/Header";
+import { Header, Sigil, Welcome } from "./components/Header";
+import { Grimoire } from "./components/Grimoire";
+import { Lexicon } from "./components/Lexicon";
 import { Library } from "./components/Library";
 import { Stage } from "./components/Stage";
 import { InfoPanel } from "./components/InfoPanel";
@@ -23,13 +25,16 @@ export default function App() {
     <>
       <Sigil />
       <Header />
+      <Welcome />
       <div className="app" id="atlas">
         <Library />
         <Stage />
         <InfoPanel />
       </div>
       <Lab />
+      <Grimoire />
       <Traditions />
+      <Lexicon />
       <footer>
         <div className="epitaph">Memento, homo, quia pulvis es, et in pulverem reverteris.</div>
         Compositions moyennes et simplifiées, en % de la masse, à but pédagogique. Les formules des protéines, de l'ADN et de la lignine sont des

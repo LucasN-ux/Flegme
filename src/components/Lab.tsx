@@ -10,8 +10,8 @@ import {
 } from "../lib/lab";
 import { useLab, labCompOf, labTry, type Mol } from "../store/lab";
 import { useAtlas } from "../store/atlas";
-import { toast, restartClass } from "../store/ui";
-import { Formula, EqText, cssVars, joinNodes } from "./ui";
+import { toast, restartClass, useUi } from "../store/ui";
+import { Formula, EqText, G, cssVars, joinNodes } from "./ui";
 
 /* ---------- mise en page des molécules dans le creuset ---------- */
 interface Placed { m: Mol; ox: number; oy: number }
@@ -266,10 +266,10 @@ function Protocol({ react, prod }: { react: string[]; prod: string[] }) {
         {P.c.map((k) => <span key={k} className={`cond${k === "danger" ? " bad" : ""}`}><i>{COND[k][0]}</i>{COND[k][1]}</span>)}
       </div>
       <ol className="psteps">
-        {P.steps.map((s, k) => <li key={k}>{s}</li>)}
-        {P.sep && <li className="sep"><b>Récupérer :</b> {P.sep}</li>}
+        {P.steps.map((s, k) => <li key={k}><G>{s}</G></li>)}
+        {P.sep && <li className="sep"><b>Récupérer :</b> <G>{P.sep}</G></li>}
       </ol>
-      {P.tip && <div className="ptip">💡 {P.tip}</div>}
+      {P.tip && <div className="ptip">💡 <G>{P.tip}</G></div>}
       {P.warn && <div className="pwarn">⚠ {P.warn}</div>}
     </div>
   );
@@ -279,12 +279,17 @@ const TOXIC = ["cl2", "co", "no2", "h2s", "f2", "hf", "o3", "so2", "ch2o", "ch3o
 
 function Equation() {
   const eq = useLab((s) => s.eq);
+  const simple = useUi((s) => s.simple);
   if (!eq) return null;
   if (eq.same) return <div className="note">Rien ne se passe : <EqList list={eq.react} /> est déjà la forme la plus stable de ces atomes.</div>;
   const dh = Math.round(eq.dh);
-  const msg = dh < -50
-    ? <><b>Exothermique</b> : la réaction libère {-dh} kJ — {dh > -200 ? "ça chauffe un peu" : dh > -600 ? "ça chauffe fort 🔥" : "ça brûle, voire ça explose 🔥🔥"}</>
-    : dh > 50 ? <><b>Endothermique</b> : il faudrait fournir {dh} kJ d'énergie ❄</> : "Presque aucun échange d'énergie.";
+  const heat = dh > -200 ? "ça chauffe un peu" : dh > -600 ? "ça chauffe fort 🔥" : "ça brûle, voire ça explose 🔥🔥";
+  const msg = simple
+    ? dh < -50 ? <>🔥 <b>Ça dégage de la chaleur</b> : {heat}.</>
+      : dh > 50 ? <>❄ <b>Ça ne se fait pas tout seul</b> : il faut apporter de l'énergie (chauffer, électricité…).</>
+      : "Presque aucun échange de chaleur."
+    : dh < -50 ? <><b><G>Exothermique</G></b> : la réaction libère {-dh} <G>kJ</G> — {heat}</>
+      : dh > 50 ? <><b><G>Endothermique</G></b> : il faudrait fournir {dh} kJ d'énergie ❄</> : "Presque aucun échange d'énergie.";
   const tox = TOXIC.filter((x) => eq.prod.includes(x) && !eq.react.includes(x));
   return (
     <>
@@ -315,7 +320,7 @@ function KnownRecipes({ sp }: { sp: string }) {
             ) : k.eq ? (
               <div className="kn-eq mono"><EqText text={k.eq} /></div>
             ) : null}
-            <p>{k.txt}</p>
+            <p><G>{k.txt}</G></p>
             {k.r && res && <button className="btn small" onClick={() => labTry(k.r!)}>⚗ Essayer au labo</button>}
           </div>
         );
@@ -344,6 +349,7 @@ function LabSide() {
   const eq = useLab((s) => s.eq);
   const { add, removeEl } = useLab.getState();
   const focus = useAtlas((s) => s.focus);
+  const simple = useUi((s) => s.simple);
 
   const comp = labCompOf(LM);
   const els = Object.keys(comp).sort((a, b) => EL[a].z - EL[b].z);
@@ -399,10 +405,10 @@ function LabSide() {
         {sp ? (
           <>
             <div className="li-head"><b>{SPC[sp].name}</b><span className="mono"><Formula f={SPC[sp].form} /></span></div>
-            <p>{SPC[sp].desc}</p>
-            {!peek && (
+            <p><G>{SPC[sp].desc}</G></p>
+            {!peek && !simple && (
               <div className="dim small">
-                Énergie de formation : <span className="mono">{SPC[sp].dh > 0 ? "+" : ""}{SPC[sp].dh} kJ/mol</span>{" "}
+                <G>Énergie de formation</G> : <span className="mono">{SPC[sp].dh > 0 ? "+" : ""}{SPC[sp].dh} kJ/mol</span>{" "}
                 {SPC[sp].dh < 0 ? "(stable)" : SPC[sp].dh > 0 ? "(instable, réactif)" : "(référence)"}
               </div>
             )}

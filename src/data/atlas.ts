@@ -565,3 +565,15 @@ export const RECETTES: Recette[] = [
   [["lait","air"],"beurre","Le barattage : en battant la crème, les gouttelettes de graisse s'agglomèrent et se séparent du petit-lait."],
   [["os","eau","feu"],"collagene","En faisant mijoter longtemps des os, le collagène se libère (et devient gélatine) : c'est le principe du bouillon."]
 ];
+
+/* Thèmes du grimoire : [nom, emoji, nombre de recettes] dans l'ordre de RECETTES */
+export const RECETTE_THEMES: [string, string, number][] = [
+  ["Éléments & météo", "🌦️", 17],
+  ["Atomes → molécules", "⚛️", 21],
+  ["Feu & combustions", "🔥", 14],
+  ["Minéraux & construction", "🧱", 25],
+  ["Métallurgie", "⚙️", 30],
+  ["Gemmes", "💎", 5],
+  ["Pétrochimie & plastiques", "🛢️", 17],
+  ["Vivant & cuisine", "🍞", 17],
+];

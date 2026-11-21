@@ -58,7 +58,7 @@ const MAX_HIST = 40;
 const withHist = (s: LabState) => [...s.hist, s.LM].slice(-MAX_HIST);
 
 export const useLab = create<LabState>((set, get) => ({
-  LM: [makeMol("hcooh")],
+  LM: ["h2", "h2", "o2"].map((sp) => makeMol(sp)),
   sel: null,
   peek: null,
   eq: null,
