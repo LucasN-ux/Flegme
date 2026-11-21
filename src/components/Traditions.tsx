@@ -37,7 +37,7 @@ function SvgNode({ id, x, y, r, c, label, emojiSize, labelSize, dy }: {
     <g className="svgnode" onClick={() => openScroll(id)}>
       <circle cx={x} cy={y} r={r} fill="#0a0a0a" stroke={c} strokeWidth="2" />
       <text x={x} y={y + dy[0]} textAnchor="middle" fontSize={emojiSize}>{IT[id].e}</text>
-      <text x={x} y={y + dy[1]} textAnchor="middle" fontSize={labelSize} fill={c} fontFamily="Cinzel">{label}</text>
+      <text x={x} y={y + dy[1]} textAnchor="middle" fontSize={labelSize} fill={c} fontFamily="Archivo">{label}</text>
     </g>
   );
 }
@@ -49,14 +49,14 @@ function Aristote() {
   return (
     <svg viewBox="0 0 400 400">
       <path d="M200 40 L360 200 L200 360 L40 200 Z" fill="none" stroke="#36332f" strokeWidth="2" />
-      <g fontFamily="Cinzel" fontSize="13" textAnchor="middle" letterSpacing="2">
+      <g fontFamily="Archivo" fontSize="13" textAnchor="middle" letterSpacing="2">
         <text x="300" y="110" fill="#ff9a6b">CHAUD</text><text x="300" y="300" fill="#6fb3ff">HUMIDE</text>
         <text x="100" y="300" fill="#9fd8ff">FROID</text><text x="100" y="110" fill="#d9b27a">SEC</text>
       </g>
       <g className="svgnode" onClick={() => openScroll("ether")}>
         <circle cx="200" cy="200" r="34" fill="#0a0a0a" stroke="#d6b3ff" strokeWidth="2" />
         <text x="200" y="198" textAnchor="middle" fontSize="20">✨</text>
-        <text x="200" y="216" textAnchor="middle" fontSize="9" fill="#d6b3ff" fontFamily="Cinzel">ÉTHER</text>
+        <text x="200" y="216" textAnchor="middle" fontSize="9" fill="#d6b3ff" fontFamily="Archivo">ÉTHER</text>
       </g>
       {nodes.map(([id, x, y, c, n]) => <SvgNode key={id} id={id} x={x} y={y} r={34} c={c} label={n} emojiSize={24} labelSize={10} dy={[2, 22]} />)}
     </svg>
@@ -83,10 +83,10 @@ function WuXing() {
   return (
     <svg viewBox="0 0 400 400">
       <defs>
-        <marker id="ah1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#e9b949" /></marker>
+        <marker id="ah1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#f0c43a" /></marker>
         <marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8b6fd6" /></marker>
       </defs>
-      {[["bois", "feu"], ["feu", "terre"], ["terre", "metal"], ["metal", "eau"], ["eau", "bois"]].map(([a, b]) => arrow(a, b, true, "#e9b949"))}
+      {[["bois", "feu"], ["feu", "terre"], ["terre", "metal"], ["metal", "eau"], ["eau", "bois"]].map(([a, b]) => arrow(a, b, true, "#f0c43a"))}
       {[["bois", "terre"], ["terre", "eau"], ["eau", "feu"], ["feu", "metal"], ["metal", "bois"]].map(([a, b]) => arrow(a, b, false, "#8b6fd6", "5 5"))}
       {Wx.map(([id, n, c]) => <SvgNode key={id} id={id} x={P[id][0]} y={P[id][1]} r={36} c={c} label={n} emojiSize={24} labelSize={10} dy={[3, 23]} />)}
     </svg>
@@ -130,7 +130,7 @@ export function Traditions() {
           <p className="sec-sub">Cinq phases qui s'engendrent (flèches pleines) et se dominent (pointillés).</p>
           <div><WuXing /></div>
           <div className="wx-list">
-            <div className="it"><b style={{ color: "#e9b949" }}>⟳ Engendrement</b><p>Le Bois nourrit le Feu · le Feu donne la Terre (cendres) · la Terre porte le Métal (minerais) · le Métal recueille l'Eau (rosée) · l'Eau nourrit le Bois.</p></div>
+            <div className="it"><b style={{ color: "#f0c43a" }}>⟳ Engendrement</b><p>Le Bois nourrit le Feu · le Feu donne la Terre (cendres) · la Terre porte le Métal (minerais) · le Métal recueille l'Eau (rosée) · l'Eau nourrit le Bois.</p></div>
             <div className="it"><b style={{ color: "#a58cf0" }}>✦ Domination</b><p>Le Bois perce la Terre · la Terre endigue l'Eau · l'Eau éteint le Feu · le Feu fond le Métal · le Métal coupe le Bois.</p></div>
           </div>
         </div>

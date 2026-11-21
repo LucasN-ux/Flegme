@@ -12,7 +12,7 @@ function NodeShape({ id, r, big }: { id: string; r: number; big?: boolean }) {
     return (
       <>
         <rect x={-r} y={-r} width={2 * r} height={2 * r} rx={r * 0.22} fill={`url(#gEl-${id})`} stroke={i.c} strokeWidth={big ? 2 : 1.5} />
-        <text y={r * 0.18} textAnchor="middle" fontFamily="Cinzel" fontWeight="700" fontSize={r * 0.78} fill="#0b0b0b">{i.icon}</text>
+        <text y={r * 0.18} textAnchor="middle" fontFamily="Archivo" fontWeight="800" fontSize={r * 0.72} fill="#0b0b0b">{i.icon}</text>
       </>
     );
   }

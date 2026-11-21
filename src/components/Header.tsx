@@ -146,10 +146,10 @@ export function Header() {
     <header className="top">
       <div className="brand">
         <svg className="brand-logo" viewBox="0 0 64 64" aria-hidden="true">
-          <circle cx="32" cy="32" r="29" fill="none" stroke="#e9b949" strokeWidth="2" />
-          <path d="M32 9 L52 44 L12 44 Z" fill="none" stroke="#e9b949" strokeWidth="2" />
-          <path d="M32 55 L52 20 L12 20 Z" fill="none" stroke="#e9b949" strokeWidth="2" opacity=".55" />
-          <circle cx="32" cy="32" r="6" fill="#e9b949" />
+          <circle cx="32" cy="32" r="29" fill="none" stroke="#f0c43a" strokeWidth="2" />
+          <path d="M32 9 L52 44 L12 44 Z" fill="none" stroke="#f0c43a" strokeWidth="2" />
+          <path d="M32 55 L52 20 L12 20 Z" fill="none" stroke="#f0c43a" strokeWidth="2" opacity=".55" />
+          <circle cx="32" cy="32" r="6" fill="#f0c43a" />
         </svg>
         <div>
           <h1>Atlas des <em>Éléments</em></h1>
