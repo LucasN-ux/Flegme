@@ -1,0 +1,236 @@
+/* ============================================================
+   LABORATOIRE MOLÉCULAIRE — données
+   ============================================================ */
+import type { SpeciesRaw, Protocol, KnownRecipe } from "./types";
+
+/* [id, nom, formule affichée, structure (SMILES simplifié), ΔHf kJ/mol, groupe, description, id atlas] */
+export const SPECIES_RAW: SpeciesRaw[] = [
+  ["H","Atome d'hydrogène","H","[H]",218,"atome","Un hydrogène tout seul : très instable, il cherche aussitôt un partenaire.","H"],
+  ["O","Atome d'oxygène","O","[O]",249,"atome","Un oxygène seul (radical) : ultra-réactif.","O"],
+  ["N","Atome d'azote","N","[N]",473,"atome","Un azote seul : il veut se lier à tout prix.","N"],
+  ["Cl","Atome de chlore","Cl","[Cl]",121,"atome","Un chlore seul : il arrache un électron à qui il peut.","Cl"],
+  ["F","Atome de fluor","F","[F]",79,"atome","Le plus réactif de tous les atomes.","F"],
+  ["C","Carbone","C","[C]",0,"elem","Du carbone pur (en vrai : des feuillets de graphite).","graphite"],
+  ["S","Soufre","S","[S]",0,"elem","Du soufre pur, jaune.","S"],
+  ["P","Phosphore","P","[P]",0,"elem","Du phosphore pur.","P"],
+  ["Si","Silicium","Si","[Si]",0,"elem","Du silicium pur, celui des puces.","Si"],
+  ["Na","Sodium","Na","[Na]",0,"elem","Métal mou qui explose au contact de l'eau.","Na"],
+  ["K","Potassium","K","[K]",0,"elem","Métal encore plus réactif que le sodium.","K"],
+  ["Ca","Calcium","Ca","[Ca]",0,"elem","Métal du calcaire et des os.","Ca"],
+  ["Mg","Magnésium","Mg","[Mg]",0,"elem","Brûle avec une lumière blanche aveuglante.","Mg"],
+  ["Al","Aluminium","Al","[Al]",0,"elem","Métal léger.","Al"],
+  ["Fe","Fer","Fe","[Fe]",0,"elem","Métal de Mars.","Fe"],
+  ["Cu","Cuivre","Cu","[Cu]",0,"elem","Métal de Vénus.","Cu"],
+  ["Zn","Zinc","Zn","[Zn]",0,"elem","Métal gris qui protège l'acier.","Zn"],
+  ["h2","Dihydrogène","H2","[H][H]",0,"gaz","Deux hydrogènes liés : le gaz le plus léger.","dihydrogene"],
+  ["o2","Dioxygène","O2","O=O",0,"gaz","L'oxygène qu'on respire, deux atomes liés par une double liaison.","dioxygene"],
+  ["n2","Diazote","N2","N#N",0,"gaz","78 % de l'air. Sa triple liaison le rend presque inerte.","diazote"],
+  ["cl2","Dichlore","Cl2","ClCl",0,"gaz","Gaz vert-jaune toxique.",null],
+  ["f2","Difluor","F2","FF",0,"gaz","Gaz jaune pâle, le plus agressif de la chimie.",null],
+  ["o3","Ozone","O3","O=[O+][O-]",143,"gaz","Trois oxygènes : le bouclier anti-UV de la haute atmosphère.","ozone"],
+  ["oh","Radical hydroxyle","OH","[OH]",39,"atome","Un oxygène + un hydrogène avec un électron célibataire : le « détergent » de l'atmosphère.",null],
+  ["ch3","Radical méthyle","CH3","[CH3]",146,"atome","Un méthane auquel on a arraché un hydrogène.",null],
+  ["h2o","Eau","H2O","O",-286,"eau","La molécule de la vie : un oxygène et deux hydrogènes en V.","eau"],
+  ["h2o2","Eau oxygénée","H2O2","OO",-188,"eau","Peroxyde d'hydrogène : désinfecte et décolore (les cheveux « peroxydés »). Se décompose doucement en eau + oxygène.",null],
+  ["co2","Dioxyde de carbone","CO2","O=C=O",-394,"carb","Ce qu'on expire et ce que produit toute combustion.","co2"],
+  ["co","Monoxyde de carbone","CO","[C-]#[O+]",-111,"carb","Gaz toxique d'une combustion qui manque d'air.","co"],
+  ["ch4","Méthane","CH4","C",-75,"carb","Le plus simple des hydrocarbures : le gaz naturel.","methane"],
+  ["c2h6","Éthane","C2H6","CC",-84,"carb","Deux carbones : le 2ᵉ gaz du gaz naturel.",null],
+  ["c2h4","Éthylène","C2H4","C=C",52,"carb","La brique du polyéthylène, le plastique n°1.","ethylene"],
+  ["c2h2","Acétylène","C2H2","C#C",227,"carb","Gaz des chalumeaux : sa flamme atteint 3100 °C.",null],
+  ["c3h8","Propane","C3H8","CCC",-104,"carb","Le gaz des bouteilles de camping.","propane"],
+  ["ch3oh","Méthanol","CH4O","CO",-239,"carb","L'« alcool de bois » : toxique, il rend aveugle.",null],
+  ["c2h5oh","Éthanol","C2H6O","CCO",-278,"carb","L'alcool des boissons.","ethanol"],
+  ["ch2o","Formaldéhyde","CH2O","C=O",-109,"carb","Le formol, gaz irritant qui conserve les tissus.",null],
+  ["hcooh","Acide formique","CH2O2","OC=O",-425,"acide","L'acide des piqûres de fourmis et d'orties.",null],
+  ["ch3cooh","Acide acétique","C2H4O2","CC(=O)O",-484,"acide","L'acide du vinaigre.","acide_acetique"],
+  ["h2co3","Acide carbonique","H2CO3","OC(=O)O",-670,"acide","Le CO₂ dissous dans l'eau : ce qui pique dans l'eau gazeuse. Instable, il se redécompose vite en eau + CO₂.",null],
+  ["uree","Urée","CH4N2O","NC(=O)N",-333,"azote","Dans l'urine ; première molécule du vivant fabriquée en labo (Wöhler, 1828). Engrais.",null],
+  ["nh3","Ammoniac","NH3","N",-46,"azote","Gaz piquant, base de tous les engrais.","ammoniac"],
+  ["no","Monoxyde d'azote","NO","[N]=O",90,"azote","Formé par la foudre et les moteurs chauds.",null],
+  ["no2","Dioxyde d'azote","NO2","O=[N+][O-]",33,"azote","Le gaz brun-roux de la pollution urbaine.",null],
+  ["n2o","Protoxyde d'azote","N2O","N#[N+][O-]",82,"azote","Le « gaz hilarant » des dentistes.",null],
+  ["hno3","Acide nitrique","HNO3","O[N+](=O)[O-]",-174,"acide","L'« eau-forte » des alchimistes : elle dissout l'argent mais pas l'or.",null],
+  ["h2s","Sulfure d'hydrogène","H2S","S",-21,"acide","L'odeur d'œuf pourri. Toxique.",null],
+  ["so2","Dioxyde de soufre","SO2","O=S=O",-297,"oxyde","Gaz suffocant des volcans ; les sulfites du vin.",null],
+  ["so3","Trioxyde de soufre","SO3","O=S(=O)=O",-396,"oxyde","Avec l'eau, il devient acide sulfurique : la pluie acide.",null],
+  ["h2so4","Acide sulfurique","H2SO4","OS(=O)(=O)O",-814,"acide","L'« huile de vitriol » des alchimistes. Très corrosif.","h2so4"],
+  ["hcl","Acide chlorhydrique","HCl","Cl",-92,"acide","L'acide de ton estomac. L'« esprit de sel » des alchimistes.","hcl"],
+  ["hf","Acide fluorhydrique","HF","F",-273,"acide","Il ronge le verre : on s'en sert pour graver les vitres.",null],
+  ["h3po4","Acide phosphorique","H3PO4","OP(=O)(O)O",-1279,"acide","L'acidité du cola ; base des engrais phosphatés.",null],
+  ["nacl","Sel","NaCl","[Na+].[Cl-]",-411,"sel","Sodium + chlore, tenus par l'attraction de leurs charges (liaison ionique).","sel"],
+  ["naoh","Soude caustique","NaOH","[Na+].[OH-]",-425,"sel","Base très corrosive : savon, déboucheur.","soude"],
+  ["na2o","Oxyde de sodium","Na2O","[Na+].[Na+].[O-2]",-414,"oxyde","Composant du verre.","na2o"],
+  ["na2co3","Carbonate de sodium","Na2CO3","[Na+].[Na+].[O-]C(=O)[O-]",-1131,"sel","Les cristaux de soude, ingrédient du verre.","carbonate_sodium"],
+  ["nahco3","Bicarbonate de soude","NaHCO3","[Na+].OC(=O)[O-]",-951,"sel","La levure chimique : avec un acide, il libère du CO₂.",null],
+  ["naclo","Eau de Javel","NaClO","[Na+].[O-]Cl",-347,"sel","Hypochlorite de sodium : blanchit et désinfecte. Jamais avec un acide (dégage du chlore) !",null],
+  ["kcl","Chlorure de potassium","KCl","[K+].[Cl-]",-437,"sel","Le sel « de régime », un engrais.",null],
+  ["koh","Potasse caustique","KOH","[K+].[OH-]",-425,"sel","Base forte des savons mous.",null],
+  ["k2co3","Potasse","K2CO3","[K+].[K+].[O-]C(=O)[O-]",-1151,"sel","Le sel tiré des cendres de bois.","potasse"],
+  ["nh4cl","Sel ammoniac","NH4Cl","[NH4+].[Cl-]",-314,"sel","La « fumée blanche » quand ammoniac et acide chlorhydrique se rencontrent. Le sel ammoniac des alchimistes.",null],
+  ["cao","Chaux vive","CaO","[Ca+2].[O-2]",-635,"oxyde","Calcaire cuit : elle chauffe violemment avec l'eau.","chaux"],
+  ["caoh2","Chaux éteinte","Ca(OH)2","[Ca+2].[OH-].[OH-]",-986,"sel","Le mortier des Romains.","chaux_eteinte"],
+  ["caco3","Calcaire","CaCO3","[Ca+2].[O-]C(=O)[O-]",-1207,"sel","Coquillages, craie, marbre.","calcaire"],
+  ["cacl2","Chlorure de calcium","CaCl2","[Ca+2].[Cl-].[Cl-]",-796,"sel","Sel de déneigement, absorbeur d'humidité.",null],
+  ["caso4","Sulfate de calcium","CaSO4","[Ca+2].[O-]S(=O)(=O)[O-]",-1434,"sel","Avec de l'eau, c'est le gypse et le plâtre.","gypse"],
+  ["mgo","Magnésie","MgO","[Mg+2].[O-2]",-602,"oxyde","La poudre blanche du magnésium brûlé.","magnesie"],
+  ["al2o3","Alumine","Al2O3","[Al+3].[Al+3].[O-2].[O-2].[O-2]",-1676,"oxyde","Corindon : rubis et saphirs en sont faits.","alumine"],
+  ["fe2o3","Rouille (hématite)","Fe2O3","[Fe+3].[Fe+3].[O-2].[O-2].[O-2]",-824,"oxyde","L'oxyde de fer rouge : rouille, ocre, planète Mars.","hematite"],
+  ["feo","Oxyde de fer noir","FeO","[Fe+2].[O-2]",-272,"oxyde","Oxyde de fer noir, intermédiaire de la rouille.",null],
+  ["fes2","Pyrite","FeS2","[Fe+2].[S-][S-]",-178,"oxyde","L'« or des fous ».","pyrite"],
+  ["cuo","Oxyde de cuivre","CuO","[Cu+2].[O-2]",-157,"oxyde","Poudre noire qui colore le verre en bleu-vert.",null],
+  ["zno","Oxyde de zinc","ZnO","[Zn+2].[O-2]",-350,"oxyde","La crème solaire blanche des surfeurs.",null],
+  ["sio2","Silice","SiO2","O=[Si]=O",-911,"oxyde","Le quartz et le sable (en vrai, un réseau 3D géant de tétraèdres).","silice"]
+];
+export const LGROUPS: Record<string, string> = {gaz:"Gaz",eau:"Eau",carb:"Carbone & organique",azote:"Azote",acide:"Acides",sel:"Sels & bases",oxyde:"Oxydes & minéraux",elem:"Éléments purs",atome:"Atomes libres"};
+export const PALETTE = ["H","C","N","O","S","Cl","F","P","Si","Na","K","Ca","Mg","Al","Fe","Cu","Zn"];
+export const EXPERIENCES: [string, string[]][] = [
+  ["Fabriquer de l'eau",["h2","h2","o2"]],
+  ["Brûler du méthane",["ch4","o2","o2"]],
+  ["Pluie acide",["so3","h2o"]],
+  ["Javel + acide = danger",["naclo","hcl","hcl"]],
+  ["Chaux + CO₂ = calcaire",["caoh2","co2"]],
+  ["Faire rouiller du fer",["Fe","Fe","Fe","Fe","o2","o2","o2"]],
+  ["Sodium + chlore = sel",["Na","Na","cl2"]],
+  ["Sodium dans l'eau",["Na","Na","h2o","h2o"]],
+  ["Éteindre la chaux",["cao","h2o"]],
+  ["Fumée blanche",["nh3","hcl"]],
+  ["Brûler de l'alcool",["c2h5oh","o2","o2","o2"]],
+  ["Eau oxygénée",["h2o","O"]],
+  ["Ammoniac (Haber)",["n2","h2","h2","h2"]]
+];
+
+/* ---------- Mode opératoire : comment faire la réaction en vrai ---------- */
+export const COND: Record<string, [string, string]> = {
+  feu:["🔥","Chauffer"], etincelle:["⚡","Étincelle / flamme"], catal:["🧪","Catalyseur"], pression:["🗜","Haute pression"],
+  eau:["💧","En solution dans l'eau"], humide:["💧","Humidité"], ajeau:["💧","Ajouter de l'eau"], air:["🌬","À l'air libre"], temps:["⏳","Patience"], froid:["❄","Refroidir"],
+  distil:["⚗","Distiller"], filtre:["🧹","Filtrer"], evap:["♨","Évaporer l'eau"], elec:["🔌","Électricité"], spont:["✨","Spontané"],
+  lumiere:["☀","Lumière / UV"], danger:["☠","Dangereux"], gaz:["🫙","Recueillir le gaz"], melanger:["🥄","Mélanger"]
+};
+export const PROTOCOLS: Protocol[] = [
+  {r:["h2","o2"],p:["h2o"],c:["etincelle","danger"],steps:["Mélanger le dihydrogène et le dioxygène (2 volumes pour 1). Sans rien d'autre, le mélange peut rester des années sans réagir.","Une étincelle ou une flamme déclenche tout : la réaction est explosive (c'est ce qui propulse l'étage principal d'Ariane).","L'eau se forme en vapeur brûlante ; elle se condense en gouttes sur une paroi froide."],warn:"Mélange détonant : ne jamais essayer hors d'un labo."},
+  {r:["o2"],p:["co2","h2o"],c:["etincelle","air"],steps:["Il faut un combustible, de l'oxygène (l'air suffit) et une flamme pour démarrer : c'est le « triangle du feu ».","Une fois allumée, la combustion s'entretient toute seule grâce à la chaleur qu'elle dégage.","Le CO₂ et la vapeur d'eau partent avec les fumées."],tip:"S'il manque d'air, la combustion devient incomplète : elle fait de la suie et du monoxyde de carbone, toxique."},
+  {r:["C","o2"],p:["co2"],c:["etincelle","air"],steps:["Enflammer le charbon (il faut le chauffer assez longtemps pour qu'il « prenne »).","Il brûle ensuite tout seul tant qu'il a de l'air ; on souffle pour l'attiser."],tip:"Sans assez d'air, on obtient du monoxyde de carbone (CO), mortel."},
+  {r:["S","o2"],p:["so2"],c:["etincelle","danger"],steps:["Enflammer du soufre : il fond, puis brûle avec une petite flamme bleue.","Le gaz produit (SO₂) est suffocant : il ne faut pas le respirer."],tip:"C'est la 1ʳᵉ étape de fabrication de l'acide sulfurique."},
+  {r:["so2","o2"],p:["so3"],c:["feu","catal"],steps:["Faire passer SO₂ + air à 450 °C sur un catalyseur à l'oxyde de vanadium (procédé de contact).","Sans catalyseur, la réaction est beaucoup trop lente."]},
+  {r:["so3","h2o"],p:["h2so4"],c:["ajeau","danger"],steps:["Le SO₃ s'obtient en brûlant du soufre (→ SO₂), puis en l'oxydant à 450 °C sur catalyseur.","En usine, on n'ajoute PAS le SO₃ directement dans l'eau : ça forme un brouillard d'acide incontrôlable. On l'absorbe dans de l'acide sulfurique déjà concentré.","Puis on dilue avec de l'eau pour obtenir la concentration voulue."],warn:"Règle d'or : toujours verser l'acide dans l'eau, jamais l'eau dans l'acide (ça projette)."},
+  {r:["naclo","hcl"],p:["cl2"],c:["spont","danger"],steps:["Aucune condition : ça réagit instantanément, à température ambiante, dès que les deux se touchent.","Un gaz verdâtre (le chlore) se dégage immédiatement."],warn:"C'est exactement ce qui arrive quand on mélange eau de Javel et détartrant / nettoyant acide. NE JAMAIS LE FAIRE : le chlore brûle les poumons."},
+  {r:["caoh2","co2"],p:["caco3"],c:["air","temps","filtre"],steps:["Pas besoin de chauffer : le CO₂ de l'air suffit, mais c'est lent (des mois, voire des années pour un mur à la chaux).","Version express : souffler avec une paille dans de l'eau de chaux. Elle devient trouble : c'est le calcaire qui se forme.","Récupérer : laisser déposer la poudre blanche, filtrer, sécher."],tip:"C'est comme ça que durcissent les mortiers et enduits à la chaux depuis les Romains."},
+  {r:["cao","co2"],p:["caco3"],c:["air","temps"],steps:["La chaux vive reprend lentement le CO₂ de l'air (surtout si elle est un peu humide).","C'est l'inverse du four à chaux, où l'on chauffe le calcaire à 900 °C pour en chasser le CO₂."]},
+  {r:["Fe","o2"],p:["fe2o3"],c:["humide","air","temps"],steps:["Le fer sec rouille à peine : il faut de l'eau ou de l'humidité en plus de l'oxygène.","Ça prend des jours à des semaines ; le sel (bord de mer) accélère beaucoup.","Version rapide : chauffer de la paille de fer dans une flamme — elle brûle en gerbes d'étincelles."],tip:"Pour éviter la rouille : peinture, huile, ou galvaniser (couche de zinc)."},
+  {r:["Mg","o2"],p:["mgo"],c:["feu","danger"],steps:["Tenir un ruban de magnésium avec une pince et le chauffer dans une flamme.","Il s'enflamme avec une lumière blanche aveuglante et laisse une poudre blanche (magnésie)."],warn:"Ne pas regarder la flamme directement (UV), et ne jamais l'éteindre avec de l'eau."},
+  {r:["Cu","o2"],p:["cuo"],c:["feu","air"],steps:["Chauffer un fil ou une plaque de cuivre dans une flamme : il se couvre d'une couche noire d'oxyde."]},
+  {r:["Al","fe2o3"],p:["al2o3"],c:["danger"],steps:["L'aluminium arrache l'oxygène à l'oxyde de fer en dégageant une chaleur énorme (plus de 2000 °C) : c'est l'aluminothermie.","Elle sert à souder les rails de chemin de fer sur place."],warn:"Réaction incendiaire extrêmement dangereuse : réservée aux professionnels."},
+  {r:["Na","cl2"],p:["nacl"],c:["feu","danger"],steps:["Le sodium chauffé brûle dans le chlore gazeux avec une flamme jaune éclatante.","Il reste une fumée blanche de sel."],tip:"En vrai, personne ne fait du sel comme ça : on évapore l'eau de mer dans des marais salants !",warn:"Sodium et chlore sont tous deux très dangereux."},
+  {r:["Na","h2o"],p:["naoh","h2"],c:["spont","danger"],steps:["Spontané et violent : le morceau de sodium file à la surface de l'eau en sifflant.","L'hydrogène dégagé peut s'enflammer, voire exploser.","La soude reste dissoute : on la récupère en évaporant l'eau."],tip:"En industrie, la soude se fabrique plutôt par électrolyse d'eau salée.",warn:"Ne jamais essayer : projections de soude brûlante."},
+  {r:["K","h2o"],p:["koh","h2"],c:["spont","danger"],steps:["Encore plus violent que le sodium : le potassium s'enflamme aussitôt avec une flamme violette."],warn:"Très dangereux."},
+  {r:["cao","h2o"],p:["caoh2"],c:["ajeau","danger"],steps:["Le CaO s'obtient d'abord en cuisant du calcaire vers 900 °C (four à chaux), qui rejette du CO₂.","Verser l'eau peu à peu sur la chaux vive (« éteindre la chaux ») : ça chauffe jusqu'à faire bouillir l'eau et la chaux gonfle en poudre.","Avec plus d'eau, on obtient un lait de chaux pour les enduits et le badigeon."],warn:"Gants et lunettes : la chaux brûle la peau et les yeux."},
+  {r:["nh3","hcl"],p:["nh4cl"],c:["spont","gaz"],steps:["Ouvrir côte à côte un flacon d'ammoniaque et un flacon d'acide chlorhydrique : les vapeurs se rencontrent dans l'air.","Une fumée blanche apparaît aussitôt et retombe en fine poudre.","Pour purifier : chauffer la poudre, elle se sublime (passe en gaz) et se redépose en cristaux plus haut."],tip:"C'est le « sel ammoniac » des alchimistes."},
+  {r:["n2","h2"],p:["nh3"],c:["feu","pression","catal","froid"],steps:["Procédé Haber-Bosch : chauffer le mélange à ~450 °C sous ~200 fois la pression atmosphérique, sur un catalyseur au fer.","Seule une partie réagit à chaque passage : on refroidit pour liquéfier l'ammoniac et le récupérer.","Le gaz qui n'a pas réagi est renvoyé dans le réacteur."],tip:"Sans catalyseur ni pression, l'azote (triple liaison) ne réagit pratiquement pas."},
+  {r:["h2","cl2"],p:["hcl"],c:["lumiere","danger"],steps:["Le mélange réagit à la lumière vive (UV) ou avec une flamme, de façon explosive.","On dissout ensuite le gaz HCl dans l'eau pour obtenir l'acide chlorhydrique."],warn:"Explosif et toxique."},
+  {r:["h2o2","h2o2"],p:["h2o","o2"],c:["catal","spont"],steps:["L'eau oxygénée se décompose toute seule, lentement : c'est pour ça qu'on la garde dans des flacons opaques.","Avec un catalyseur (levure, morceau de foie, dioxyde de manganèse), c'est instantané et ça mousse : la célèbre « pâte à dentifrice d'éléphant »."]},
+  {r:["h2o","O"],p:["h2o2"],c:["catal","distil"],steps:["En vrai, on ne fabrique pas l'eau oxygénée en « ajoutant un oxygène » à l'eau.","Procédé à l'anthraquinone : un intermédiaire organique capte l'hydrogène puis le cède à l'oxygène de l'air, ce qui forme H₂O₂.","On la purifie ensuite par distillation sous vide, à basse température (elle se décompose à la chaleur)."]},
+  {r:["nahco3"],p:["co2"],c:["spont","melanger"],steps:["Mélanger le bicarbonate avec un acide (vinaigre, citron, acide chlorhydrique) : ça mousse immédiatement.","Les bulles sont du CO₂ ; c'est aussi comme ça que la levure chimique fait gonfler les gâteaux (avec la chaleur du four)."]},
+  {r:["co2","h2o"],p:["h2co3"],c:["eau","pression","froid"],steps:["Dissoudre du CO₂ dans de l'eau froide sous pression (siphon, machine à soda).","Une petite partie forme de l'acide carbonique, qui repart en bulles dès qu'on ouvre la bouteille."]},
+  {r:["c2h4","h2o"],p:["c2h5oh"],c:["feu","pression","catal","distil"],steps:["Industriellement : éthylène + vapeur d'eau à 300 °C, 60 bars, sur un catalyseur acide.","On sépare l'alcool de l'eau par distillation."],tip:"L'éthanol des boissons vient plutôt de la fermentation du sucre par des levures."},
+  {r:["sio2","C"],p:["Si"],c:["feu","elec"],steps:["Four à arc électrique à ~2000 °C : le carbone arrache l'oxygène de la silice."]}
+];
+export const STATE: Record<string, string> = {gaz:"g",h2:"g",o2:"g",n2:"g",cl2:"g",f2:"g",o3:"g",co2:"g",co:"g",ch4:"g",c2h6:"g",c2h4:"g",c2h2:"g",c3h8:"g",ch2o:"g",nh3:"g",no:"g",no2:"g",n2o:"g",h2s:"g",so2:"g",hcl:"g",hf:"g",
+  h2o:"l",h2o2:"l",ch3oh:"l",c2h5oh:"l",hcooh:"l",ch3cooh:"l",hno3:"l",h2so4:"l",so3:"l",h2co3:"aq",
+  H:"g",O:"g",N:"g",Cl:"g",F:"g",oh:"g",ch3:"g"};
+export const SOLUBLE = new Set(["nacl","naoh","kcl","koh","nh4cl","cacl2","na2co3","nahco3","naclo","k2co3","uree","h3po4"]);
+export const ACIDS = ["hcl","hno3","h2so4","h3po4","ch3cooh","hcooh","hf","h2co3"];
+export const BASES = ["naoh","koh","caoh2","nh3","na2o","cao"];
+export const BORING = ["h2o","co2","o2","h2","n2"];
+
+/* ============================================================
+   RECETTES CONNUES (réelles) par molécule
+   r/p : réactifs/produits du labo (permet « Essayer ») ; eq : équation en texte sinon
+   ============================================================ */
+export const KNOWN: KnownRecipe[] = [
+  // acide formique
+  {t:"Piqûre de fourmi ou d'ortie", for:["hcooh","nahco3"], eq:"HCOOH + NaHCO₃ → HCOONa + H₂O + CO₂", txt:"Les fourmis et les orties injectent de l'acide formique. Une pâte de bicarbonate (une base) le neutralise et calme la brûlure."},
+  {t:"Fabriquer du monoxyde de carbone", for:["hcooh","co","h2so4"], eq:"HCOOH → CO + H₂O", txt:"Méthode classique de labo : on chauffe de l'acide formique avec de l'acide sulfurique concentré, qui lui « arrache » une molécule d'eau. Le CO produit est mortel."},
+  {t:"Stocker de l'hydrogène", for:["hcooh","h2","co2"], eq:"HCOOH → CO₂ + H₂", txt:"Avec un catalyseur (palladium, ruthénium), l'acide formique libère de l'hydrogène : une piste pour les voitures à hydrogène."},
+  {t:"Fabrication industrielle", for:["hcooh","ch3oh","co"], eq:"CH₃OH + CO → HCOOCH₃ → (+ H₂O) HCOOH + CH₃OH", txt:"On fait réagir méthanol et monoxyde de carbone (formiate de méthyle), puis on hydrolyse avec de l'eau ; le méthanol est recyclé."},
+  {t:"Usages", for:["hcooh"], txt:"Conservation du fourrage (ensilage), tannage du cuir, détartrants, traitement des ruches contre le varroa."},
+  // eau
+  {t:"Électrolyse de l'eau", for:["h2o","h2","o2"], eq:"2 H₂O → 2 H₂ + O₂", txt:"Avec du courant électrique (et un peu de sel ou de soude pour conduire), l'eau se sépare en hydrogène et en oxygène. Il faut fournir de l'énergie : c'est l'inverse de la combustion."},
+  {t:"Photosynthèse", for:["h2o","co2","o2"], eq:"6 CO₂ + 6 H₂O + lumière → C₆H₁₂O₆ + 6 O₂", txt:"Les plantes fabriquent du sucre avec l'eau, le CO₂ de l'air et la lumière, et rejettent l'oxygène que nous respirons."},
+  // CO2
+  {t:"Test de l'eau de chaux", for:["co2","caoh2","caco3"], r:["caoh2","co2"], txt:"On fait buller un gaz dans l'eau de chaux : si elle se trouble (calcaire), c'est qu'il contient du CO₂."},
+  {t:"Capturer le CO₂", for:["co2","naoh","na2co3"], r:["co2","naoh","naoh"], txt:"La soude absorbe le CO₂ : utilisé dans les sous-marins et pour capter le CO₂ des fumées d'usine."},
+  {t:"Eau gazeuse", for:["co2","h2co3"], eq:"CO₂ + H₂O ⇄ H₂CO₃", txt:"Sous pression, le CO₂ se dissout dans l'eau et forme un peu d'acide carbonique : le piquant des sodas."},
+  // méthane & hydrocarbures
+  {t:"Combustion du gaz naturel", for:["ch4"], r:["ch4","o2","o2"], txt:"La flamme bleue de la gazinière et des chaudières."},
+  {t:"Vaporeformage (fabriquer de l'hydrogène)", for:["ch4","h2","co"], eq:"CH₄ + H₂O → CO + 3 H₂", txt:"À 800 °C sur un catalyseur au nickel. C'est ainsi qu'on produit aujourd'hui la majorité de l'hydrogène."},
+  {t:"Chalumeau oxyacétylénique", for:["c2h2"], r:["c2h2","o2","o2","o2","o2","o2"], txt:"L'acétylène brûlé dans l'oxygène pur donne une flamme à 3100 °C, assez chaude pour couper l'acier."},
+  {t:"Lampe à carbure", for:["c2h2"], eq:"CaC₂ + 2 H₂O → C₂H₂ + Ca(OH)₂", txt:"Les mineurs et spéléologues faisaient goutter de l'eau sur du carbure de calcium : l'acétylène dégagé brûlait au bout de la lampe."},
+  {t:"Plastique polyéthylène", for:["c2h4"], eq:"n C₂H₄ → (–CH₂–CH₂–)ₙ", txt:"Avec un catalyseur, des milliers d'éthylènes s'enchaînent : le plastique le plus produit au monde."},
+  {t:"Alcool à partir d'éthylène", for:["c2h4","c2h5oh"], r:["c2h4","h2o"], txt:"Éthylène + vapeur d'eau sur catalyseur acide à 300 °C : de l'éthanol industriel."},
+  {t:"Bouteille de camping", for:["c3h8"], r:["c3h8","o2","o2","o2","o2","o2"], txt:"Le propane brûle en CO₂ et eau ; il se stocke liquide sous pression dans la bouteille."},
+  // ammoniac & azote
+  {t:"Procédé Haber-Bosch", for:["nh3","n2","h2"], r:["n2","h2","h2","h2"], txt:"450 °C, 200 bars, catalyseur au fer : l'azote de l'air devient ammoniac. Base de tous les engrais azotés."},
+  {t:"Fabriquer de l'urée (engrais)", for:["nh3","uree","co2"], r:["nh3","nh3","co2"], txt:"Procédé Bosch-Meiser : ammoniac + CO₂ sous pression. L'urée est l'engrais le plus utilisé au monde."},
+  {t:"Procédé Ostwald (acide nitrique)", for:["nh3","no","no2","hno3"], eq:"4 NH₃ + 5 O₂ → 4 NO + 6 H₂O, puis NO → NO₂ → HNO₃", txt:"On brûle l'ammoniac sur une toile de platine, puis on fait absorber les oxydes d'azote par l'eau."},
+  {t:"La fumée blanche", for:["nh3","hcl","nh4cl"], r:["nh3","hcl"], txt:"Approche deux flacons ouverts d'ammoniaque et d'acide chlorhydrique : un nuage blanc de chlorure d'ammonium apparaît."},
+  {t:"Synthèse de Wöhler (1828)", for:["uree"], eq:"NH₄OCN → CO(NH₂)₂", txt:"En chauffant du cyanate d'ammonium, Wöhler obtint de l'urée : la première molécule du vivant fabriquée en labo. Fin de l'idée que le vivant serait fait d'une matière à part."},
+  {t:"L'azote fixé par la foudre", for:["no","n2","o2"], eq:"N₂ + O₂ → 2 NO", txt:"L'énorme chaleur d'un éclair force l'azote et l'oxygène de l'air à se combiner ; la pluie entraîne ensuite ces nitrates dans le sol (engrais naturel)."},
+  {t:"Le gaz brun des villes", for:["no","no2"], r:["no","no","o2"], txt:"Le NO des pots d'échappement s'oxyde à l'air en NO₂, brun et irritant."},
+  {t:"L'eau régale", for:["hno3","hcl"], eq:"HNO₃ + 3 HCl → (dissout l'or)", txt:"Le mélange d'acide nitrique et chlorhydrique des alchimistes, seul capable de dissoudre l'or, « roi des métaux »."},
+  // soufre
+  {t:"Procédé de contact (acide sulfurique)", for:["h2so4","so2","so3","S"], eq:"S → SO₂ → SO₃ → H₂SO₄", txt:"On brûle du soufre, on oxyde le SO₂ en SO₃ sur un catalyseur à 450 °C, puis on l'absorbe dans l'acide."},
+  {t:"Pluie acide sur les statues", for:["h2so4","caco3","caso4"], r:["h2so4","caco3"], txt:"L'acide ronge le calcaire et le marbre en les transformant en sulfate de calcium qui s'effrite : les statues anciennes « fondent »."},
+  {t:"Le sucre qui devient charbon", for:["h2so4"], eq:"C₁₂H₂₂O₁₁ → 12 C + 11 H₂O", txt:"L'acide sulfurique concentré arrache l'eau du sucre : il reste une colonne de carbone noir et fumant."},
+  {t:"Le gaz des volcans qui disparaît", for:["h2s","so2"], r:["h2s","o2","o2"], txt:"Le sulfure d'hydrogène brûle en dioxyde de soufre et en eau."},
+  // chlore & acides
+  {t:"Détartrer une bouilloire", for:["hcl","caco3","cacl2"], r:["hcl","hcl","caco3"], txt:"L'acide dissout le tartre (calcaire) en dégageant des bulles de CO₂. Le vinaigre fait pareil, plus doucement."},
+  {t:"Neutraliser un acide", for:["hcl","naoh","nacl"], r:["hcl","naoh"], txt:"Acide + base → sel + eau. Avec la soude et l'acide chlorhydrique, on obtient littéralement de l'eau salée."},
+  {t:"Fabriquer l'eau de Javel", for:["cl2","naclo","naoh"], r:["cl2","naoh","naoh"], txt:"On fait barboter du chlore dans de la soude froide : c'est la recette de Berthollet (1789), fabriquée à Javel, près de Paris."},
+  {t:"Le mélange interdit", for:["naclo","hcl","cl2"], r:["naclo","hcl","hcl"], txt:"Javel + acide = dégagement de chlore. Ne jamais mélanger Javel et détartrant."},
+  {t:"Électrolyse de l'eau salée", for:["nacl","naoh","cl2"], eq:"2 NaCl + 2 H₂O → 2 NaOH + Cl₂ + H₂", txt:"Avec de l'électricité, l'eau salée donne trois produits très utiles : soude, chlore et hydrogène."},
+  {t:"Graver le verre", for:["hf","sio2"], eq:"SiO₂ + 4 HF → SiF₄ + 2 H₂O", txt:"L'acide fluorhydrique est l'un des rares à attaquer le verre : on s'en sert pour le graver ou le dépolir. Extrêmement dangereux pour la peau."},
+  {t:"Du soufre dans les engrais", for:["h3po4"], eq:"Ca₃(PO₄)₂ + 3 H₂SO₄ → 2 H₃PO₄ + 3 CaSO₄", txt:"On attaque la roche phosphatée par l'acide sulfurique pour obtenir l'acide phosphorique des engrais (et du cola)."},
+  // sodium, calcium
+  {t:"Fabriquer du savon", for:["naoh","koh"], eq:"graisse + 3 NaOH → 3 savon + glycérine", txt:"La saponification : la soude coupe les graisses en savon. Avec la potasse (KOH), on obtient du savon mou (savon noir)."},
+  {t:"Le volcan au vinaigre", for:["nahco3","ch3cooh"], eq:"NaHCO₃ + CH₃COOH → CH₃COONa + H₂O + CO₂", txt:"Bicarbonate + vinaigre : une mousse de CO₂ jaillit. L'expérience préférée des écoles."},
+  {t:"La levure chimique au four", for:["nahco3","na2co3"], eq:"2 NaHCO₃ → Na₂CO₃ + H₂O + CO₂", txt:"Chauffé, le bicarbonate libère du CO₂ qui fait gonfler les gâteaux."},
+  {t:"Bicarbonate contre les brûlures d'estomac", for:["nahco3","hcl"], r:["nahco3","hcl"], txt:"Il neutralise l'acide de l'estomac (et fait roter : c'est le CO₂)."},
+  {t:"Le carbonate de soude effervescent", for:["na2co3","hcl"], r:["na2co3","hcl","hcl"], txt:"Les carbonates moussent tous au contact d'un acide."},
+  {t:"Procédé Solvay", for:["na2co3","nacl","caco3"], eq:"2 NaCl + CaCO₃ → Na₂CO₃ + CaCl₂", txt:"Avec du sel, du calcaire et de l'ammoniac (recyclé), Ernest Solvay produisit dès 1863 le carbonate de soude pour le verre."},
+  {t:"Le four à chaux", for:["caco3","cao","co2"], eq:"CaCO₃ → CaO + CO₂", txt:"On cuit le calcaire vers 900 °C : il perd son CO₂ et devient chaux vive. Il faut beaucoup d'énergie (réaction endothermique)."},
+  {t:"Éteindre la chaux", for:["cao","caoh2"], r:["cao","h2o"], txt:"La chaux vive + eau chauffe jusqu'à faire bouillir : on obtient la chaux éteinte des mortiers."},
+  {t:"Le mortier qui durcit", for:["caoh2","caco3"], r:["caoh2","co2"], txt:"La chaux éteinte reprend le CO₂ de l'air et redevient du calcaire : le cycle de la chaux."},
+  {t:"Du plâtre", for:["caso4"], eq:"CaSO₄·½H₂O + 1,5 H₂O → CaSO₄·2H₂O", txt:"Le plâtre en poudre reprend de l'eau et cristallise en gypse dur."},
+  {t:"Le sel des marais salants", for:["nacl"], txt:"La façon la plus simple d'obtenir du sel : laisser le soleil et le vent évaporer l'eau de mer."},
+  {t:"Le sel par la manière forte", for:["nacl","Na","cl2"], r:["Na","Na","cl2"], txt:"Le sodium brûle dans le chlore : spectaculaire et dangereux."},
+  {t:"La potasse des cendres", for:["k2co3","koh"], txt:"On lavait les cendres de bois à l'eau et on faisait évaporer : il restait la potasse, pour le savon et le verre."},
+  // métaux & oxydes
+  {t:"Le haut fourneau", for:["fe2o3","co","Fe"], r:["fe2o3","co","co","co"], txt:"Le monoxyde de carbone (du coke qui brûle) arrache l'oxygène au minerai : on obtient du fer liquide."},
+  {t:"La rouille", for:["fe2o3","Fe","o2"], r:["Fe","Fe","Fe","Fe","o2","o2","o2"], txt:"Le fer + l'oxygène + de l'humidité, lentement."},
+  {t:"Le ruban de magnésium", for:["mgo","Mg"], r:["Mg","Mg","o2"], txt:"Il brûle avec une lumière blanche aveuglante (les flashs photo d'autrefois)."},
+  {t:"Réduire l'oxyde de cuivre", for:["cuo","Cu","h2"], r:["cuo","h2"], txt:"L'hydrogène chaud retire l'oxygène : la poudre noire redevient du cuivre rouge brillant (et il se forme de l'eau)."},
+  {t:"Oxyder le cuivre", for:["cuo","Cu"], r:["Cu","Cu","o2"], txt:"Chauffé dans une flamme, le cuivre noircit."},
+  {t:"Le zinc qui brûle", for:["zno","Zn"], r:["Zn","Zn","o2"], txt:"Le zinc brûle en « laine philosophique », la neige blanche d'oxyde de zinc des alchimistes."},
+  {t:"Électrolyse de l'aluminium", for:["al2o3","Al"], eq:"2 Al₂O₃ → 4 Al + 3 O₂", txt:"Procédé Hall-Héroult : électrolyse de l'alumine fondue à 960 °C, énormément d'électricité."},
+  {t:"Griller la pyrite", for:["fes2"], eq:"4 FeS₂ + 11 O₂ → 2 Fe₂O₃ + 8 SO₂", txt:"Chauffée à l'air, la pyrite libère du dioxyde de soufre, autrefois la source principale d'acide sulfurique."},
+  {t:"Faire du silicium", for:["sio2","Si","C"], eq:"SiO₂ + 2 C → Si + 2 CO", txt:"Four à arc électrique à 2000 °C : le carbone retire l'oxygène du quartz. Base des puces et panneaux solaires."},
+  {t:"Fabriquer du verre", for:["sio2","na2co3","caco3"], eq:"SiO₂ + Na₂CO₃ + CaCO₃ → verre + CO₂", txt:"Sable + soude + calcaire fondus vers 1500 °C."},
+  // alcools & acides organiques
+  {t:"La fermentation", for:["c2h5oh","co2"], eq:"C₆H₁₂O₆ → 2 C₂H₅OH + 2 CO₂", txt:"Les levures mangent le sucre (raisin, orge…) sans air et rejettent alcool et bulles : vin, bière, pain."},
+  {t:"Le vin qui tourne au vinaigre", for:["c2h5oh","ch3cooh"], r:["c2h5oh","o2"], txt:"Des bactéries oxydent l'alcool avec l'oxygène de l'air : acide acétique."},
+  {t:"Brûler de l'alcool", for:["c2h5oh","ch3oh"], r:["c2h5oh","o2","o2","o2"], txt:"Flamme bleue presque invisible (flambage des crêpes)."},
+  {t:"Fabriquer du méthanol", for:["ch3oh","co","h2"], r:["co","h2","h2"], txt:"Gaz de synthèse (CO + H₂) à 250 °C, 50-100 bars, catalyseur cuivre-zinc."},
+  {t:"Le formol", for:["ch2o","ch3oh"], eq:"2 CH₃OH + O₂ → 2 CH₂O + 2 H₂O", txt:"On oxyde le méthanol sur de l'argent ou du fer-molybdène ; dissous dans l'eau, c'est le formol."},
+  {t:"Les esters qui sentent bon", for:["ch3cooh","c2h5oh"], eq:"CH₃COOH + C₂H₅OH → CH₃COOC₂H₅ + H₂O", txt:"Acide + alcool (avec une goutte d'acide sulfurique, à chaud) → ester : l'odeur de banane, de colle, de vernis à ongles."},
+  {t:"Le gaz hilarant", for:["n2o"], eq:"NH₄NO₃ → N₂O + 2 H₂O", txt:"On chauffe doucement du nitrate d'ammonium. Utilisé en anesthésie et dans les siphons à chantilly."},
+  // eau oxygénée, ozone, hydrogène
+  {t:"Le dentifrice d'éléphant", for:["h2o2","o2"], r:["h2o2","h2o2"], txt:"Avec un catalyseur (levure, iodure de potassium), l'eau oxygénée se décompose d'un coup en une énorme mousse d'oxygène."},
+  {t:"Décolorer les cheveux", for:["h2o2"], txt:"L'eau oxygénée oxyde la mélanine (le pigment) : d'où les cheveux « peroxydés »."},
+  {t:"La couche d'ozone", for:["o3","o2"], eq:"3 O₂ + UV → 2 O₃", txt:"Là-haut, les UV du Soleil cassent l'oxygène qui se recombine en ozone ; l'ozone absorbe ensuite ces UV. Les éclairs en fabriquent aussi (l'odeur d'orage)."},
+  {t:"Moteur de fusée", for:["h2","o2","h2o"], r:["h2","h2","o2"], txt:"L'étage principal d'Ariane brûle hydrogène et oxygène liquides : il ne rejette que de la vapeur d'eau."},
+  {t:"Respirer", for:["o2"], eq:"C₆H₁₂O₆ + 6 O₂ → 6 CO₂ + 6 H₂O + énergie", txt:"Tes cellules « brûlent » lentement le sucre avec l'oxygène : c'est la respiration."},
+  {t:"La foudre qui fait de l'ozone", for:["o3"], txt:"L'odeur piquante après l'orage, c'est de l'ozone formé par les éclairs."},
+  {t:"Le monoxyde qui brûle", for:["co","co2"], r:["co","co","o2"], txt:"Le CO brûle avec une flamme bleue en CO₂ (c'est ce qui se passe au-dessus des braises)."},
+  {t:"Combustion incomplète", for:["co","C"], eq:"2 C + O₂ → 2 CO", txt:"Un poêle ou une chaudière qui manque d'air produit du CO, inodore et mortel : d'où les détecteurs de CO."}
+];
