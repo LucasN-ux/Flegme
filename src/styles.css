@@ -557,7 +557,7 @@ html,body{overflow-x:clip}
 :root{
   --bg:#1f1e1d; --bg2:#1a1918; --panel:#2a2927; --panel2:#34322f; --line:#3a3835; --line2:#4a4741;
   --text:#f4ecdc; --muted:#c9bfae; --dim:#8f877a; --gold:#f0c43a; --gold2:#f6d56b;
-  --red:#b42a3c; --red2:#8f1f2f; --cream:#f4ecdc; --ink:#2a2320;
+  --red:#0b0b0b; --red2:#000000; --cream:#f4ecdc; --ink:#2a2320;
   --display:"Archivo",system-ui,sans-serif; --ui:"Archivo",system-ui,sans-serif; --black:"Pirata One",serif;
 }
 html,body{font-size:16px;line-height:1.5}
@@ -610,7 +610,7 @@ header.top{background:rgba(31,30,29,.94);border-bottom:0;padding:12px 22px}
 .lib-h{font-size:10.5px;font-stretch:125%;font-weight:800;border-bottom-color:var(--line)}
 .lib-row{border-radius:10px;border-left:0;padding:5px 8px}
 .lib-row:hover{background:var(--panel2)}
-.lib-row.on{background:var(--red);color:#fff}
+.lib-row.on{background:var(--red);color:#fff;box-shadow:inset 0 0 0 1.5px var(--gold)}
 .lib-row.on .abar{background:rgba(0,0,0,.3)}
 .add-btn{background:var(--bg);border:0;color:var(--gold)}
 .add-btn:hover{background:var(--gold);color:var(--ink)}
@@ -701,7 +701,7 @@ footer .epitaph::before,footer .epitaph::after{content:" ✦ ";color:var(--gold)
 .toast{border-radius:99px;color:var(--ink);font-size:11.5px}
 
 /* accueil : bandeau rouge */
-.welcome{background:var(--red);border:0;border-radius:16px;margin:10px 18px 4px;max-width:none;--muted:#f3d3cd}
+.welcome{background:var(--red);border:0;border-radius:16px;margin:10px 18px 4px;max-width:none;--muted:#cfc6b6}
 .welcome .w-intro{color:var(--muted)}
 .welcome .w-intro b{font-family:var(--black);font-weight:400;font-size:28px;letter-spacing:0;color:var(--gold);display:block;line-height:1}
 .welcome li>b{border:1.5px solid var(--gold);color:var(--gold);font-family:var(--display);font-weight:800}
@@ -720,7 +720,7 @@ footer .epitaph::before,footer .epitaph::after{content:" ✦ ";color:var(--gold)
 .labsec{background:none;border-bottom:0}
 .lab{gap:14px;border:0;background:none}
 .lab-lib,.lab-side{background:var(--panel);border:0!important;border-radius:16px}
-.lab-stage{background:var(--red);border-radius:16px;--muted:#f3d3cd; --dim:#e3a2a6}
+.lab-stage{background:var(--red);border-radius:16px;--muted:#cfc6b6; --dim:#8f877a}
 .lab-stage::after{content:"";position:absolute;inset:10px;border:1.5px solid rgba(240,196,58,.55);border-radius:10px;pointer-events:none}
 .lab-ring{border-color:rgba(240,196,58,.45);box-shadow:0 0 0 10px rgba(0,0,0,.06),0 0 0 11px rgba(240,196,58,.3),inset 0 0 80px rgba(0,0,0,.12)}
 .lab-ring::after{border-color:rgba(240,196,58,.3)}
