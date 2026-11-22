@@ -620,9 +620,9 @@ header.top{background:rgba(31,30,29,.94);border-bottom:0;padding:12px 22px}
 .mt.on{outline-color:var(--gold);background:var(--gold);color:var(--ink)}
 .at{border-radius:8px;font-family:var(--display);font-weight:700}
 
-/* scène : la grande carte rouge */
-.stage{background:var(--red);border-radius:16px;
-  --muted:#f3d3cd; --dim:#e3a2a6; --line:rgba(244,236,220,.22); --line2:rgba(244,236,220,.4); --panel2:rgba(0,0,0,.18)}
+/* scène : la grande carte noire */
+.stage{background:#0b0b0b;border-radius:16px;
+  --muted:#cfc6b6; --dim:#8f877a; --line:rgba(244,236,220,.18); --line2:rgba(244,236,220,.34); --panel2:rgba(255,255,255,.06)}
 .stage::after{content:"";position:absolute;inset:10px;border:1.5px solid rgba(240,196,58,.55);border-radius:10px;pointer-events:none;z-index:3}
 .stage::before{content:"";position:absolute;right:28px;top:66px;width:64px;height:64px;pointer-events:none;opacity:.9;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23f0c43a' d='M40 4C41 14 44 17 54 18C44 19 41 22 40 32C39 22 36 19 26 18C36 17 39 14 40 4Z'/%3E%3Cpath fill='%23f4ecdc' d='M16 34C16.6 40 18.4 41.8 24 42.4C18.4 43 16.6 44.8 16 50.8C15.4 44.8 13.6 43 8 42.4C13.6 41.8 15.4 40 16 34Z'/%3E%3C/svg%3E") no-repeat center/contain}
@@ -631,7 +631,7 @@ header.top{background:rgba(31,30,29,.94);border-bottom:0;padding:12px 22px}
 .crumbs button{border-radius:99px}
 .crumbs button.on{color:#fff}
 .stage-top .btn{border-color:var(--gold);color:var(--gold)}
-.stage-top .btn:hover{background:var(--gold);color:var(--red)}
+.stage-top .btn:hover{background:var(--gold);color:var(--ink)}
 .banner.on{margin:8px 22px 0;border:1.5px solid var(--gold);border-radius:12px;background:rgba(31,30,29,.88)}
 .banner .tag{border-radius:99px;color:var(--ink)}
 .g-title{left:26px;top:8px}
